@@ -1,6 +1,6 @@
 # lain0_microservices
 
-lain0 microservices repository
+[![Build Status](https://api.travis-ci.org/Otus-DevOps-2018-02/lain0_microservices.svg?branch=master)](https://api.travis-ci.org/Otus-DevOps-2018-02/lain0_microservices)
 
 # hw13 Docker
 [67]: https://docs.docker.com/install/linux/docker-ce/ubuntu/
