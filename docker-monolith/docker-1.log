@@ -13,20 +13,13 @@ gitlab/gitlab-runner    latest              75d6cae37cad        6 months ago    
 mongo                   latest              0f57644645eb        6 months ago        366MB
 debian                  jessie-slim         d086c1dfff1f        7 months ago        79.1MB
 mysql_mysql             latest              90614393dc3b        9 months ago        292MB
-<none>                  <none>              f2a9233dd2f4        9 months ago        447MB
-<none>                  <none>              9105d09d203a        9 months ago        447MB
-<none>                  <none>              071798e88d1e        9 months ago        447MB
-<none>                  <none>              c1eb427f4c8e        9 months ago        447MB
-<none>                  <none>              de2e34d20acc        9 months ago        447MB
-<none>                  <none>              8bc86f875393        9 months ago        447MB
-<none>                  <none>              f93191d5c225        9 months ago        447MB
-<none>                  <none>              3505af5c0376        9 months ago        412MB
 mysql                   5.5                 b5c2178101be        10 months ago       257MB
 mysql                   5.7                 b4e78b89bcf3        10 months ago       412MB
 
 #######################################################
 docker inspect image_id
 docker inspect 7902
+
 
 docker inspect container_id
 docker inspect 4ab
