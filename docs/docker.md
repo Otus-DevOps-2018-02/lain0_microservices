@@ -10,23 +10,39 @@
 `docker ps -a`
 - list all saves docker images:
 `docker images`
-- run new container:
+- docker run (creates new container):
+`docker run` = `docker create + docker start + docker attach*`
+ * while using -i option for foreground mode
 `docker run -it ubuntu:16.04 /bin/bash`
 - start existing docker container:
 `docker start 'container_id'`
 - attach terminal to docker container
 `docker attach 'container_id'`
 ### exin containet Ctrl+p Ctrl+q after `docker attach`
-- docker run:
-`docker run` = `docker create + docker start +
-docker attach*`
- * while using -i option for foreground mode
 - `docker create` is used when no need to start container immediately
-- exec process inside docker container:
+- exec process inside an existing docker container:
 `docker exec -it <u_container_id> bash`
 - create image from container
-`docker commit`
+`docker commit container_id imagename:tagname`
 - show diff from last container before
 `docker diff 'container_id'`
+- build image
+`docker build -t image_name:tag_name .`
+- create tag:
+`docker tag reddit:latest <your-login>/otus-reddit:1.0`
+- `docker login` for loginning to dockerhub.com
 #################################
 # docker-compose
+
+#################################
+# docker-machine
+- create new docker vm host
+`docker-machine create hostname`
+- switch between docker remote vm hosts
+`eval $(docker-machine env hostname)`
+- switch to local docker
+`eval $(docker-machine env --unset)`
+- rm vm host
+`docker-machine rm hostname`
+- list docker-machines vm hosts:
+`docker-machine ls`
