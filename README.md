@@ -110,3 +110,59 @@ start without app
 all changes removed
 `docker run --name reddit --rm -it <your-login>/otus-reddit:1.0 bash`
   - ls /
+
+# hw15 Docker Images Microservices
+[79]: https://github.com/hadolint/hadolint
+[80]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+[81]: https://github.com/express42/reddit/archive/microservices.zip
+[82]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-16/%D0%A1%D0%B5%D1%80%D0%B2%D0%B8%D1%81%20post-py
+[83]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-16/%D0%A1%D0%B5%D1%80%D0%B2%D0%B8%D1%81%20comment
+[84]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-16/%D0%A1%D0%B5%D1%80%D0%B2%D0%B8%D1%81%20ui
+
+[docker linter][79]
+install: `docker pull hadolint/hadolint`
+usage: `docker run --rm -i hadolint/hadolint < Dockerfile`
+```
+docker run --rm -i hadolint/hadolint hadolint \
+  --ignore DL3003 \
+  --ignore DL3006 \
+  - < Dockerfile
+```
+
+set remote docker env
+```
+docker-machine ls
+eval $(docker-machine env docker-host)
+```
+1) Build Docker Images
+Lets split monolith Docker image
+
+load mongo image:
+`docker pull mongo:latest`
+build images *post-py* *comment* *ui*:
+```
+docker build -t lain0/post:1.0 ./post-py
+docker build -t lain0/comment:1.0 ./comment
+docker build -t lain0/ui:1.0 ./
+```
+
+Create new bridge network: `docker network create reddit`
+Run containers connecting to network reddit:
+```
+docker run -d --network=reddit --network-alias=post_db --network-alias=comment_db mongo:latest
+docker run -d --network=reddit --network-alias=post lain0/post:1.0
+docker run -d --network=reddit --network-alias=comment lain0/comment:1.0
+docker run -d --network=reddit -p 9292:9292 lain0/ui:1.0
+```
+IP: `docker-machine ip docker-host`
+
+### Task *
+stop all containers: `docker kill $(docker ps -q)`
+
+Create another network reddit-test: `docker network create reddit-test`
+docker ls all networks: `docker network ls`
+
+
+
+2) Optimize Dockerfiles
+3) Run applications from docker images
