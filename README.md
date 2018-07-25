@@ -118,6 +118,7 @@ all changes removed
 [82]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-16/%D0%A1%D0%B5%D1%80%D0%B2%D0%B8%D1%81%20post-py
 [83]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-16/%D0%A1%D0%B5%D1%80%D0%B2%D0%B8%D1%81%20comment
 [84]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-16/%D0%A1%D0%B5%D1%80%D0%B2%D0%B8%D1%81%20ui
+[85]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-16/%D0%A1%D0%B5%D1%80%D0%B2%D0%B8%D1%81%20ui%20-%20%D1%83%D0%BB%D1%83%D1%87%D1%88%D0%B0%D0%B5%D0%BC%20%D0%BE%D0%B1%D1%80%D0%B0%D0%B7
 
 [docker linter][79]
 install: `docker pull hadolint/hadolint`
@@ -158,11 +159,22 @@ IP: `docker-machine ip docker-host`
 
 ### Task *
 stop all containers: `docker kill $(docker ps -q)`
-
-Create another network reddit-test: `docker network create reddit-test`
 docker ls all networks: `docker network ls`
 
 
-
+we need to set ENV to override ENV settings from dockerfiles:
+ * POST_DATABASE_HOST
+ * COMMENT_DATABASE_HOST
+ * POST_SERVICE_HOST
+ * COMMENT_SERVICE_HOST
+```
+docker run -d --network=reddit --network-alias=post_db2 --network-alias=comment_db2 mongo:latest
+docker run -d --network=reddit --network-alias=post2 --env POST_DATABASE_HOST=post_db2 lain0/post:1.0
+docker run -d --network=reddit --network-alias=comment2 --env COMMENT_DATABASE_HOST=comment_db2 lain0/comment:1.0
+docker run -d --network=reddit --env POST_SERVICE_HOST=post2 --env COMMENT_SERVICE_HOST=comment2 -p 9292:9292 lain0/ui:1.0
+```
+IP: `docker-machine ip docker-host`
 2) Optimize Dockerfiles
+build from ubuntu 16.04
+`docker build -t lain0/ui:2.0 ./ui`
 3) Run applications from docker images
