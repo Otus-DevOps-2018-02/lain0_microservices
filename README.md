@@ -4,8 +4,10 @@
 
 ## hw13 Docker
 [67]: https://docs.docker.com/install/linux/docker-ce/ubuntu/
-`docker run`
 [68]: https://docs.docker.com/engine/reference/commandline/commit/#examples
+
+`docker run`
+
 1) install [Docker][67] via `pip install docker`
 docker parametres:
 
