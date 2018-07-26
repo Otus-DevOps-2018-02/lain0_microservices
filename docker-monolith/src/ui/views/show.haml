@@ -39,11 +39,11 @@
 %form{action: "/post/#{@post['_id']['$oid']}/comment", method: 'post', role: 'form'}
   .col-sm-4
     .form-group
-      %input{name: 'name', type: 'text', class: 'form-control', placeholder: 'name'}
+      %input{name: 'name', type: 'text', required: true, class: 'form-control', placeholder: 'name'}
   .col-sm-4
     .form-group
       %input{name: 'email', type: 'email', class: 'form-control', placeholder: 'email'}
   .col-sm-8
     .form-group
-      %textarea{name: 'body', class: 'form-control', placeholder: 'put a nice comment :)'}
+      %textarea{name: 'body', required: true, class: 'form-control', placeholder: 'put a nice comment :)'}
     %button{class: 'btn btn-block btn-primary'} Post my comment

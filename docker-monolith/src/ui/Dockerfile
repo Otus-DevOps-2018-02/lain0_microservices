@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:3.7
 
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
@@ -13,12 +13,12 @@ ADD Gemfile* $APP_HOME/
 #     } >> /usr/local/etc/gemrc
 RUN apk --no-cache add ruby ruby-io-console \
     && apk --no-cache add --virtual build-dependencies ruby-dev ruby-bundler build-base \
-    && bundle install \
+    && bundle install && bundle clean --force\
     && apk del build-dependencies \
     && rm -rf /usr/lib/ruby/gems/*/cache/* \
-          /var/cache/apk/* \
-          /tmp/* \
-          /var/tmp/*
+      /var/cache/apk/* \
+      /tmp/* \
+      /var/tmp/*
 
 ADD . $APP_HOME
 
