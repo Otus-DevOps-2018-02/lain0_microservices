@@ -4,7 +4,8 @@ ENV APP_HOME /app
 RUN mkdir $APP_HOME
 
 WORKDIR $APP_HOME
-ADD Gemfile* $APP_HOME/
+# ADD Gemfile* $APP_HOME/
+COPY . $APP_HOME/
 
 # RUN mkdir -p /usr/local/etc \
 #     && { \
@@ -20,7 +21,7 @@ RUN apk --no-cache add ruby ruby-io-console \
       /tmp/* \
       /var/tmp/*
 
-ADD . $APP_HOME
+# ADD . $APP_HOME
 
 ENV POST_SERVICE_HOST post
 ENV POST_SERVICE_PORT 5000
