@@ -46,3 +46,5 @@
 `docker-machine rm hostname`
 - list docker-machines vm hosts:
 `docker-machine ls`
+- ssh
+`docker-machine ssh hostname`
