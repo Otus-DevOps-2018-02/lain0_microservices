@@ -10,6 +10,7 @@ mongo_host = ENV['COMMENT_DATABASE_HOST'] || '127.0.0.1'
 mongo_port = ENV['COMMENT_DATABASE_PORT'] || '27017'
 mongo_database = ENV['COMMENT_DATABASE'] || 'test'
 
+
 # Create and register metrics
 prometheus = Prometheus::Client.registry
 
@@ -22,7 +23,7 @@ prometheus.register(comment_count)
 
 ## Schedule healthcheck function
 if File.exist?('build_info.txt')
-  build_info = File.readlines('build_info.txt')
+  build_info=File.readlines('build_info.txt')
 
   scheduler = Rufus::Scheduler.new
 
@@ -40,14 +41,14 @@ configure do
 end
 
 get '/:id/comments' do
-  id = obj_id(params[:id])
+  id   = obj_id(params[:id])
   settings.mongo_db.find(post_id: "#{id}").to_a.to_json
 end
 
 post '/add_comment/?' do
   content_type :json
-  halt 400, json(error: 'No name provided') if params['name'].nil? || params['name'].empty?
-  halt 400, json(error: 'No comment provided') if params['body'].nil? || params['body'].empty?
+  halt 400, json(error: 'No name provided') if params['name'].nil? or params['name'].empty?
+  halt 400, json(error: 'No comment provided') if params['body'].nil? or params['body'].empty?
   db = settings.mongo_db
   result = db.insert_one post_id: params['post_id'], name: params['name'], email: params['email'], body: params['body'], created_at: params['created_at']
   db.find(_id: result.inserted_id).to_a.first.to_json

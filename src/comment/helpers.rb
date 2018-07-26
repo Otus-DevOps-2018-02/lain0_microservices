@@ -1,3 +1,4 @@
+
 def obj_id(val)
   begin
     BSON::ObjectId.from_string(val)
@@ -11,7 +12,7 @@ def document_by_id(id)
   if id.nil?
     {}.to_json
   else
-    document = settings.mongo_db.find(_id: id).to_a.first
+    document = settings.mongo_db.find(:_id => id).to_a.first
     (document || {}).to_json
   end
 end
