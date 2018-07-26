@@ -1,8 +1,7 @@
 require 'prometheus/client'
-
+# metrics for Prometheus
 class Metrics
-
-  def initialize app
+  def initialize(app)
     @app = app
     prometheus = Prometheus::Client.registry
     @request_count = Prometheus::Client::Counter.new(:ui_request_count, 'App Request Count')
@@ -11,7 +10,7 @@ class Metrics
     prometheus.register(@request_count)
   end
 
-  def call env
+  def call(env)
     request_started_on = Time.now
     @status, @headers, @response = @app.call(env)
     request_ended_on = Time.now
@@ -19,5 +18,4 @@ class Metrics
     @request_count.increment({ method: env['REQUEST_METHOD'], path: env['REQUEST_PATH'], http_status: @status })
     [@status, @headers, @response]
   end
-
 end

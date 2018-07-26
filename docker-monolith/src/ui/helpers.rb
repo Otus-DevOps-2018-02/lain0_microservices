@@ -23,7 +23,7 @@ def healthcheck(post_host, post_port, comment_host, comment_port)
 
   version = File.read('VERSION')
 
-  healthcheck= {
+  healthcheck = {
     status: status,
     dependent_services: {
       comment: comment_status,
