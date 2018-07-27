@@ -3,3 +3,5 @@ prometheus/
 
 ## python specific
 *.pyc
+## Docker-compose
+.env
