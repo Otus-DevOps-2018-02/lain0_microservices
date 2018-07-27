@@ -197,3 +197,19 @@ docker run -d --network=reddit -p 9292:9292 lain0/ui:2.0
 
 alpine 3.8 not working va my Dockerfiles
 fixed show.haml file - aded required=>true in no_name_value or no_comment_value
+
+# hw16 Docker-compose networking docker image testing
+[]:
+
+1) Networking
+```
+docker-machine ls
+eval $(docker-machine env docker-host)
+```
+- net none
+```
+docker run --network none --rm -d --name net_test joffotron/docker-net-tools -c "sleep 100"
+```
+- net host
+- net bridge
+2) Docker-compose
