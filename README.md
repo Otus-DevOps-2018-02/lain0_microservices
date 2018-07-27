@@ -209,7 +209,31 @@ eval $(docker-machine env docker-host)
 - net none
 ```
 docker run --network none --rm -d --name net_test joffotron/docker-net-tools -c "sleep 100"
+docker exec -ti net_test ifconfig
 ```
 - net host
+```
+docker run --network host --rm -d --name net_test joffotron/docker-net-tools -c "sleep 100"
+docker exec -ti net_test ifconfig
+```
+```
+docker run --network host -d nginx
+docker kill $(docker ps -q)
+```
+use ip net-namespaces
+```
+docker-machine ssh docker-host
+sudo ln -s /var/run/docker/netns /var/run/netns
+sudo ip netns ls
+sudo ip netns exec default netstat -tulpn
+```
 - net bridge
+create docker bridge `docker network create reddit --driver bridge`
+```
+docker run -d --network=reddit mongo:latest
+docker run -d --network=reddit lain0/post:1.0
+docker run -d --network=reddit lain0/comment:13.0
+docker run -d --network=reddit -p 9292:9292 lain0/ui:12.0
+```
+
 2) Docker-compose
