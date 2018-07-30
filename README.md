@@ -366,3 +366,9 @@ gitlab/gitlab-runner:latest
 ```
 3) Register gitlab runner:
 `docker exec -it gitlab-runner gitlab-runner register`
+
+#### Task  *
+- integration gitlab-ci vs slack was made by adding webhook from slack to
+`Project Settings > Integrations > Slack notifications`
+link to slack chanel:
+`https://devops-team-otus.slack.com/messages/C9M0Z3ZM2/`
