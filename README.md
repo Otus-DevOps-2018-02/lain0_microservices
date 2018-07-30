@@ -202,8 +202,9 @@ fixed show.haml file - aded required=>true in no_name_value or no_comment_value
 [89]: https://docs.docker.com/compose/install/#install-compose
 [90]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-17/docker-compose.yml
 [91]: https://docs.docker.com/compose/compose-file/
+[92]: https://docs.docker.com/compose/networking/
 
-1) Networking
+1) [Networking][92]
 ```
 docker-machine ls
 eval $(docker-machine env docker-host)
@@ -275,4 +276,21 @@ docker kill $(docker ps -q)
 export USERNAME=lain0
 docker-compose up -d
 docker-compose ps
+```
+```
+docker network rm back_net
+docker network rm front_net
+docker-compose up -d
+docker-compose ps
+```
+Docker-composer project name can be defined
+- vs ENV - `COMPOSE_PROJECT_NAME`
+- vs docker-compose cli env option `-p` / `--project-name`
+- vs
+```
+tree -a
+.
+├── .docker-compose
+│   └── project-name
+└── docker-compose.yml
 ```

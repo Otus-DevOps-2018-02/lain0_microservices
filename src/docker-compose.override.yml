@@ -1,0 +1,31 @@
+---
+version: '3.3'
+services:
+  ui:
+    volumes:
+      - app_ui:/app
+    command: 'puma --debug -w 2'
+  post:
+    volumes:
+      - ap_post:/app
+  comment:
+    volumes:
+      - app_comment:/app
+    command: 'puma --debug -w 2'
+
+volumes:
+  app_ui:
+    driver_opts:
+      type: none
+      o: bind
+      device: "${APP_PATH}/ui"
+  ap_post:
+    driver_opts:
+      type: none
+      o: bind
+      device: "${APP_PATH}/post"
+  app_comment:
+    driver_opts:
+      type: none
+      o: bind
+      device: "${APP_PATH}/comment"

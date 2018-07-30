@@ -2,31 +2,59 @@
 version: '3.3'
 services:
   post_db:
-    image: mongo:3.2
+    container_name: ${COMPOSE_PROJECT_NAME}-mongo-${MONGO_TAG_VERSION}
+    image: mongo:${MONGO_TAG_VERSION}
     volumes:
-      - post_db:/data/db
+      - post_db:${DB_PATH}
     networks:
-      - reddit
+      back_net:
+        aliases:
+          - post_db
+          - comment_db
   ui:
     build: ./ui
-    image: ${USERNAME}/ui:1.0
+    container_name: ${COMPOSE_PROJECT_NAME}-${USERNAME}-ui-${UI_TAG_VERSION}
+    image: ${USERNAME}/ui:${UI_TAG_VERSION}
     ports:
-      - 9292:9292/tcp
+      - ${UI_HOST_PORT}:${UI_CONTAINER_PORT}/tcp
     networks:
-      - reddit
+      - front_net
   post:
     build: ./post-py
-    image: ${USERNAME}/post:1.0
+    container_name: ${COMPOSE_PROJECT_NAME}-${USERNAME}-post-${POST_TAG_VERSION}
+    image: ${USERNAME}/post:${POST_TAG_VERSION}
     networks:
-      - reddit
+      back_net:
+        aliases:
+          - post
+      front_net:
+        aliases:
+          - post
   comment:
     build: ./comment
-    image: ${USERNAME}/comment:1.0
+    container_name: ${COMPOSE_PROJECT_NAME}-${USERNAME}-comment-${COMMENT_TAG_VERSION}
+    image: ${USERNAME}/comment:${COMMENT_TAG_VERSION}
     networks:
-      - reddit
-
+      back_net:
+        aliases:
+          - comment
+      front_net:
+        aliases:
+          - comment
 volumes:
   post_db:
 
 networks:
-  reddit:
+  # reddit:
+  back_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.2.0/24
+  front_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.1.0/24
