@@ -31,9 +31,16 @@
 - create tag:
 `docker tag reddit:latest <your-login>/otus-reddit:1.0`
 - `docker login` for loginning to dockerhub.com
+- network
+`docker network ls`
+- volume
+`docker volume ls`
 #################################
 # docker-compose
-
+- ls
+`docker-compose ps`
+- build
+`docker-compose up -d`
 #################################
 # docker-machine
 - create new docker vm host

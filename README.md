@@ -294,3 +294,50 @@ tree -a
 │   └── project-name
 └── docker-compose.yml
 ```
+
+# hw17 GitlabCI Continuos Integration
+
+[93]: https://docs.gitlab.com/ce/install/requirements.html
+[94]: https://docs.gitlab.com/omnibus/README.html
+[95]: https://docs.gitlab.com/omnibus/docker/README.html
+[96]: https://gist.github.com/Nklya/c2ca40a128758e2dc2244beb09caebe1
+
+1) Installation GitlabCI
+We create new GCP machine vs:
+  * 1 CPU
+  * 3.75GB RAM
+  * 50-100 GB HDD
+  * Ubuntu 16.04
+
+```
+export GOOGLE_PROJECT=docker-211106
+docker-machine create --driver google \
+  --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
+  --google-machine-type n1-standard-1 \
+  --google-zone europe-west1-b \
+  --google-disk-size 75 \
+  gitlab-host
+eval $(docker-machine env gitlab-host)
+docker-machine ls
+```
+open gce ports tcp:80, tcp:443
+```
+gcloud compute firewall-rules create allow-http-https \
+--allow tcp:80 \
+--allow tcp:443 \
+--target-tags=docker-machine \
+--description="Allow http\https" \
+--direction=INGRESS
+```
+
+```
+sudo docker run --detach \
+    --hostname gitlab.example.com \
+    --publish 443:443 --publish 80:80 --publish 22:22 \
+    --name gitlab \
+    --restart always \
+    --volume /srv/gitlab/config:/etc/gitlab \
+    --volume /srv/gitlab/logs:/var/log/gitlab \
+    --volume /srv/gitlab/data:/var/opt/gitlab \
+    gitlab/gitlab-ce:latest
+```
