@@ -301,6 +301,7 @@ tree -a
 [94]: https://docs.gitlab.com/omnibus/README.html
 [95]: https://docs.gitlab.com/omnibus/docker/README.html
 [96]: https://gist.github.com/Nklya/c2ca40a128758e2dc2244beb09caebe1
+[97]: https://gist.github.com/Nklya/ab352648c32492e6e9b32440a79a5113
 
 1) Installation GitlabCI
 We create new GCP machine vs:
@@ -320,20 +321,32 @@ docker-machine create --driver google \
 eval $(docker-machine env gitlab-host)
 docker-machine ls
 ```
-open gce ports tcp:80, tcp:443
+open gce ports tcp:80, tcp:443 tcp:2222
 ```
-gcloud compute firewall-rules create allow-http-https \
+gcloud compute firewall-rules create allow-80-http \
 --allow tcp:80 \
+--target-tags=docker-machine \
+--description="Allow gitlab_container_http" \
+--direction=INGRESS
+
+gcloud compute firewall-rules create allow-https \
 --allow tcp:443 \
 --target-tags=docker-machine \
---description="Allow http\https" \
+--description="Allow gitlab_container_https" \
+--direction=INGRESS
+
+gcloud compute firewall-rules create allow-ssh-2222 \
+--allow tcp:2222 \
+--target-tags=docker-machine \
+--description="Allow gitlab_container_ssh" \
 --direction=INGRESS
 ```
+
 
 ```
 sudo docker run --detach \
     --hostname gitlab.example.com \
-    --publish 443:443 --publish 80:80 --publish 22:22 \
+    --publish 443:443 --publish 80:80 --publish 2222:22 \
     --name gitlab \
     --restart always \
     --volume /srv/gitlab/config:/etc/gitlab \
@@ -341,3 +354,14 @@ sudo docker run --detach \
     --volume /srv/gitlab/data:/var/opt/gitlab \
     gitlab/gitlab-ce:latest
 ```
+docker-compose up -d
+
+2) Install Gitlab Runner:
+```
+docker run -d --name gitlab-runner --restart always \
+-v /srv/gitlab-runner/config:/etc/gitlab-runner \
+-v /var/run/docker.sock:/var/run/docker.sock \
+gitlab/gitlab-runner:latest
+```
+3) Register gitlab runner:
+`docker exec -it gitlab-runner gitlab-runner register`
