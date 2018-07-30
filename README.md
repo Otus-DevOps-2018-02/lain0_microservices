@@ -303,6 +303,7 @@ tree -a
 [96]: https://gist.github.com/Nklya/c2ca40a128758e2dc2244beb09caebe1
 [97]: https://gist.github.com/Nklya/ab352648c32492e6e9b32440a79a5113
 [98]: https://gist.github.com/Nklya/d70ff7c6d1c02de8f18bcd049e904942
+[99]: https://docs.gitlab.com/runner/register/
 
 1) Installation GitlabCI
 We create new GCP machine vs:
@@ -372,3 +373,17 @@ gitlab/gitlab-runner:latest
 `Project Settings > Integrations > Slack notifications`
 link to slack chanel:
 `https://devops-team-otus.slack.com/messages/C9M0Z3ZM2/`
+
+- multi task [gitlab-runner register][99] automation via ` --non-interactive`:
+```
+docker run --rm -t -i -v /path/to/config:/etc/gitlab-runner --name gitlab-runner gitlab/gitlab-runner register \
+  --non-interactive \
+  --executor "docker" \
+  --docker-image alpine:latest \
+  --url "http://<YOUR-VM-IP>/" \
+  --registration-token "PROJECT_REGISTRATION_TOKEN" \
+  --description "docker-runner" \
+  --tag-list "docker" \
+  --run-untagged \
+  --locked="false"
+  ```
