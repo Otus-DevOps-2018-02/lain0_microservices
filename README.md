@@ -302,6 +302,7 @@ tree -a
 [95]: https://docs.gitlab.com/omnibus/docker/README.html
 [96]: https://gist.github.com/Nklya/c2ca40a128758e2dc2244beb09caebe1
 [97]: https://gist.github.com/Nklya/ab352648c32492e6e9b32440a79a5113
+[98]: https://gist.github.com/Nklya/d70ff7c6d1c02de8f18bcd049e904942
 
 1) Installation GitlabCI
 We create new GCP machine vs:
