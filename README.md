@@ -387,3 +387,40 @@ docker run --rm -t -i -v /path/to/config:/etc/gitlab-runner --name gitlab-runner
   --run-untagged \
   --locked="false"
   ```
+
+# hw18 Gitlab-ci CD
+
+[100]:
+
+1) start  gitlab-host vs gitlab:
+```
+docker-machine start gitlab-host
+```
+sudenly IP changed and we need to regenerate certificates:
+`docker-machine regenerate-certs gitlab-host`
+
+```
+eval $(docker-machine env gitlab-host)
+docker-machine ls
+docker ps
+```
+2) Create new project via web interface in gitlab: `example2`
+git remote add new:
+
+```
+git checkout -b gitlab-ci-2
+git remote add gitlab2 http://35.195.73.169/homework/example2.git
+```
+register runner:
+```
+docker run --rm -t -i -v /srv/gitlab-runner/config:/etc/gitlab-runner --name gitlab-runner gitlab/gitlab-runner register \
+  --non-interactive \
+  --executor "docker" \
+  --docker-image alpine:latest \
+  --url "http://35.195.73.169" \
+  --registration-token "3s7P3szEYMnCt4gzA4eJ" \
+  --description "docker-runner" \
+  --tag-list "docker" \
+  --run-untagged \
+  --locked="false"
+  ```
