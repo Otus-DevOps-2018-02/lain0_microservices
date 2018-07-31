@@ -418,9 +418,11 @@ docker run --rm -t -i -v /srv/gitlab-runner/config:/etc/gitlab-runner --name git
   --executor "docker" \
   --docker-image alpine:latest \
   --url "http://35.195.73.169" \
-  --registration-token "3s7P3szEYMnCt4gzA4eJ" \
+  --registration-token "token" \
   --description "docker-runner" \
   --tag-list "docker" \
   --run-untagged \
   --locked="false"
-  ```
+```
+
+3) Dev enviroment
