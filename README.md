@@ -426,3 +426,4 @@ docker run --rm -t -i -v /srv/gitlab-runner/config:/etc/gitlab-runner --name git
 ```
 
 3) Dev enviroment
+dynamic env
