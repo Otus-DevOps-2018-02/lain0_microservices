@@ -19,6 +19,8 @@ build_job:
   stage: build
   script:
     - echo 'Building'
+    # - docker-mashine ls
+    # - docker build -t ${USERNAME}/reddit .
 
 test_unit_job:
   stage: test

@@ -390,7 +390,7 @@ docker run --rm -t -i -v /path/to/config:/etc/gitlab-runner --name gitlab-runner
 
 # hw18 Gitlab-ci CD
 
-[100]:
+[100]: https://docs.gitlab.com/ee/ci/environments.html
 
 1) start  gitlab-host vs gitlab:
 ```
@@ -425,5 +425,4 @@ docker run --rm -t -i -v /srv/gitlab-runner/config:/etc/gitlab-runner --name git
   --locked="false"
 ```
 
-3) Dev enviroment
-dynamic env
+3) Dev enviroment, [Dynamic env][100]
