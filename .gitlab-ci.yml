@@ -20,8 +20,6 @@ build_job:
 
 test_unit_job:
   stage: test
-  script:
-    - echo 'Testing 1'
   services:
     - mongo:latest
   script:
