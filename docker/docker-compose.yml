@@ -54,6 +54,7 @@ services:
     networks:
       - front_net
       - back_net
+
   node-exporter:
     image: prom/node-exporter:v0.15.2
     user: root
@@ -65,6 +66,13 @@ services:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+    networks:
+      - back_net
+
+  mongodb-exporter:
+    image: eses/mongodb_exporter:latest
+    command:
+      - '-mongodb.uri=mongodb://post_db:27017'
     networks:
       - back_net
 
