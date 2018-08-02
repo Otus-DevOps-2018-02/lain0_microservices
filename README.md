@@ -432,6 +432,11 @@ docker run --rm -t -i -v /srv/gitlab-runner/config:/etc/gitlab-runner --name git
 [101]: https://gist.github.com/Nklya/1752e865d2fab92402f6413cb00bf2ca
 [102]: https://gist.github.com/Nklya/bfe2d817f72bc6376fb7d05507e97a1d
 [103]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-21/add_prometheus
+[104]: https://prometheus.io/docs/instrumenting/exporters/
+[105]: https://github.com/prometheus/node_exporter
+[106]: https://gist.github.com/Nklya/4b38f2ee1521252af80995a2bc667cb1
+[107]: https://github.com/prometheus/blackbox_exporter
+[108]: https://github.com/google/cloudprober
 
 1) Install Prometheus:
  - Open ports in GCP
@@ -468,3 +473,18 @@ docker build -t $USER_NAME/prometheus .
 for i in ui post-py comment; do cd src/$i; bash docker_build.sh; cd -; done
 ```
  - Run microservices && prometheus: `docker-compose up -d`
+ - [Exporters][104]
+ - let's use [Node Exporter][105] for collecting metrics from docker-host
+add new job to prometheus config and rebuild prometheus image
+`docker build -t $USER_NAME/prometheus .`
+
+- Push images to hub.docker.org
+```
+export USER_NAME=lain0
+docker login
+for i in ui post comment prometheus; do docker push $USER_NAME/$i; done
+```
+ - [blackbox_exporter][107] and [cloudprober][108]
+ - Makefiles
+
+ [Dockerhub account lain0](https://hub.docker.com/u/lain0/)
