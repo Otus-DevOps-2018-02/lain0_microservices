@@ -426,3 +426,45 @@ docker run --rm -t -i -v /srv/gitlab-runner/config:/etc/gitlab-runner --name git
 ```
 
 3) Dev enviroment, [Dynamic env][100]
+
+# hw19 Prometheus
+
+[101]: https://gist.github.com/Nklya/1752e865d2fab92402f6413cb00bf2ca
+[102]: https://gist.github.com/Nklya/bfe2d817f72bc6376fb7d05507e97a1d
+[103]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-21/add_prometheus
+
+1) Install Prometheus:
+ - Open ports in GCP
+```
+gcloud compute firewall-rules create prometheus-default --allow tcp:9090
+gcloud compute firewall-rules create puma-default --allow tcp:9292
+```
+ - Create host in gcp:
+
+```
+export GOOGLE_PROJECT=docker-211106
+# create docker host
+docker-machine create --driver google \
+    --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
+    --google-machine-type n1-standard-1 \
+    --google-zone europe-west1-b \
+    docker-host
+```
+ - Configure local env
+```
+eval $(docker-machine env docker-host)
+docker run --rm -p 9090:9090 -d --name prometheus  prom/prometheus
+docker-machine ip docker-host
+```
+ - Stop Prometeus and make docker prometheus image vs config for reddit microservices: `docker stop prometheus`
+ - Configuration: `monitoring/prometheus/prometheus.yml`
+ - Create Prometheus image:
+ ```
+export USER_NAME=lain0
+docker build -t $USER_NAME/prometheus .
+```
+ - Build microservices Images via docker_build.sh:
+```
+for i in ui post-py comment; do cd src/$i; bash docker_build.sh; cd -; done
+```
+ - Run microservices && prometheus: `docker-compose up -d`
