@@ -76,6 +76,10 @@ services:
     networks:
       - back_net
 
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    networks:
+      - front_net
 
 volumes:
   prometheus_data:

@@ -437,7 +437,8 @@ docker run --rm -t -i -v /srv/gitlab-runner/config:/etc/gitlab-runner --name git
 [106]: https://gist.github.com/Nklya/4b38f2ee1521252af80995a2bc667cb1
 [107]: https://github.com/prometheus/blackbox_exporter
 [108]: https://github.com/google/cloudprober
-[109]: https://hub.docker.com/r/eses/
+[109]: https://hub.docker.com/r/eses/mongodb_exporter/
+[110]: https://gist.github.com/mpneuried/0594963ad38e68917ef189b4e6a269db
 
 1) Install Prometheus:
  - Open ports in GCP
@@ -485,7 +486,11 @@ export USER_NAME=lain0
 docker login
 for i in ui post comment prometheus; do docker push $USER_NAME/$i; done
 ```
- - [blackbox_exporter][107] and [cloudprober][108]
- - Makefiles
+#### tasks *
  - [mongodb_exporter][109]
+-web.listen-address - The listen address of the exporter (default: ":9104")
+ - [blackbox_exporter][107] and [cloudprober][108]
+ cloudprober is less documented for prometheus.yml jobs case so it's easier to use blackbox-exporter
+ - [Makefiles][110]
+
  [Dockerhub account lain0](https://hub.docker.com/u/lain0/)
