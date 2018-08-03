@@ -499,6 +499,8 @@ for i in ui post comment prometheus; do docker push $USER_NAME/$i; done
 # hw20 Monitoring infrastructure Alerting
 [112]: https://github.com/google/cadvisor
 [113]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/add_cadvisor
+[114]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/add_grafana
+[115]: https://grafana.com/dashboards
 
 ```
 eval $(docker-machine env docker-host)
@@ -513,4 +515,19 @@ Let's split `docker-compose.yml` into two files by:
   `docker-compose -f docker-compose-monitoring.yml up -d`
 2) [cAdvisor][112]
 Rebuild prometheus vs cAdvisor job
-`export USER_NAME=username`
+```
+export USER_NAME=username
+docker build -t $USER_NAME/prometheus monitoring/prometheus/
+```
+Run containers:
+```
+docker-compose up -d
+docker-compose -f docker-compose-monitoring.yml up -d
+```
+Open port tcp:8080 for cAdvisor
+`gcloud compute firewall-rules create cadvisor-allow --allow tcp:8080`
+3) Metrics Visualisations - [Grafana][115]
+open port for grafana:
+`gcloud compute firewall-rules create grafana-allow --allow tcp:3000`
+build and run grafana container:
+`docker-compose -f docker-compose-monitoring.yml up -d grafana`
