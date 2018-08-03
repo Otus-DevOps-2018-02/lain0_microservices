@@ -439,6 +439,7 @@ docker run --rm -t -i -v /srv/gitlab-runner/config:/etc/gitlab-runner --name git
 [108]: https://github.com/google/cloudprober
 [109]: https://hub.docker.com/r/eses/mongodb_exporter/
 [110]: https://gist.github.com/mpneuried/0594963ad38e68917ef189b4e6a269db
+[111]: https://github.com/google/cloudprober/blob/master/Makefile
 
 1) Install Prometheus:
  - Open ports in GCP
@@ -494,3 +495,22 @@ for i in ui post comment prometheus; do docker push $USER_NAME/$i; done
  - [Makefiles][110]
 
  [Dockerhub account lain0](https://hub.docker.com/u/lain0/)
+
+# hw20 Monitoring infrastructure Alerting
+[112]: https://github.com/google/cadvisor
+[113]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/add_cadvisor
+
+```
+eval $(docker-machine env docker-host)
+docker-mashine ls
+docker-machine ip docker-host
+```
+1) Docker Container Monitoring
+Let's split `docker-compose.yml` into two files by:
+  - for running microservices - `docker-compose.yml` runs:
+  `docker-compose up -d`
+  - for running monitoring `docker-compose-monitoring.yml` runs:
+  `docker-compose -f docker-compose-monitoring.yml up -d`
+2) [cAdvisor][112]
+Rebuild prometheus vs cAdvisor job
+`export USER_NAME=username`

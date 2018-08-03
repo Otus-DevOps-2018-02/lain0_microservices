@@ -47,7 +47,7 @@
 `docker-machine create hostname`
 - switch between docker remote vm hosts
 `eval $(docker-machine env hostname)`
-- switch to local docker
+- switch to local docker or unset env
 `eval $(docker-machine env --unset)`
 - rm vm host
 `docker-machine rm hostname`
