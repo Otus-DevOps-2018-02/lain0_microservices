@@ -501,10 +501,13 @@ for i in ui post comment prometheus; do docker push $USER_NAME/$i; done
 [113]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/add_cadvisor
 [114]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/add_grafana
 [115]: https://grafana.com/dashboards
+[116]: https://github.com/express42/reddit/commit/e443f6ab4dcf25f343f2a50c01916d750fc2d096
+[117]: https://github.com/express42/reddit/commit/d8a0316c36723abcfde367527bad182a8e5d9cf2
+
 
 ```
 eval $(docker-machine env docker-host)
-docker-mashine ls
+docker-machine ls
 docker-machine ip docker-host
 ```
 1) Docker Container Monitoring
@@ -531,3 +534,12 @@ open port for grafana:
 `gcloud compute firewall-rules create grafana-allow --allow tcp:3000`
 build and run grafana container:
 `docker-compose -f docker-compose-monitoring.yml up -d grafana`
+4) Collecting application metrics && Monitoring APP
+
+```
+export USER_NAME=lain0
+docker build -t $USER_NAME/prometheus monitoring/prometheus/
+cd docker
+docker-compose -f docker-compose-monitoring.yml down
+docker-compose -f docker-compose-monitoring.yml up -d
+```
