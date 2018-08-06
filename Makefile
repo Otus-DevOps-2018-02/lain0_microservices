@@ -24,8 +24,8 @@ down: ## docker-compose down
 get-ip:
 	docker-machine ip docker-host
 
-gcp: ## eval to gcp host
-	$(eval $(docker-machine env docker-host))
+gcp: ## EXPORT get no sense for so no eval (
+	# $(eval $(docker-machine env docker-host))
 	docker-machine ls
 	docker-machine ip docker-host
 

@@ -560,7 +560,7 @@ rate(ui_request_count{http_status=~"^[45].*"}[1m])
 histogram_quantile(0.95, sum(rate(ui_request_latency_seconds_bucket[5m])) by (le))
 5) Collecting Buisness metrics
 6) Alerting
- - build docker image for Prometheus Alertmanager
+ - build docker image for Prometheus Alertmanager component
 ```
 cd monitoring/alertmanager/
 docker build -t lain0/alertmanager .
@@ -573,11 +573,14 @@ docker build -t lain0/alertmanager .
  docker build -t lain0/prometheus .
  ```
  - Recreate docker monitoring infrastructure:
- ```
- cd docker
- docker-compose -f docker-compose-monitoring.yml down
- docker-compose -f docker-compose-monitoring.yml up -d
- ```
+```
+cd docker
+docker-compose -f docker-compose-monitoring.yml down
+docker-compose -f docker-compose-monitoring.yml up -d
+gcloud compute firewall-rules create alertmanager-allow --allow tcp:9093
+```
 
 8) Push all lain0/* repository to dockerhub
 `make push-dockerhub`
+
+ [Dockerhub account lain0](https://hub.docker.com/u/lain0/)
