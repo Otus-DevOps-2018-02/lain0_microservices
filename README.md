@@ -507,6 +507,8 @@ for i in ui post comment prometheus; do docker push $USER_NAME/$i; done
 [119]: https://github.com/prometheus/client_ruby#counter
 [120]: https://prometheus.io/docs/prometheus/latest/querying/functions/
 [121]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/histogram_quantile
+[122]: https://github.com/express42/reddit/commit/b2e73f1bcc121e9bae67a246dd9e3215a1079d6f
+[123]: https://github.com/express42/reddit/commit/5e011209a92ba5749d6975a2b7cb35aad49e304e
 
 ```
 eval $(docker-machine env docker-host)
@@ -546,10 +548,10 @@ cd docker
 docker-compose -f docker-compose-monitoring.yml down
 docker-compose -f docker-compose-monitoring.yml up -d
 ```
-[Histogram][118]
-[Percentile]
-
+[Histogram][118] and Percentile
 rate(ui_request_count[1m])
 rate(ui_request_count{http_status=~"^[200].*"}[1m])
 rate(ui_request_count{http_status=~"^[45].*"}[1m])
 histogram_quantile(0.95, sum(rate(ui_request_latency_seconds_bucket[5m])) by (le))
+5) Collecting Buisness metrics
+6) Alerting
