@@ -509,6 +509,11 @@ for i in ui post comment prometheus; do docker push $USER_NAME/$i; done
 [121]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/histogram_quantile
 [122]: https://github.com/express42/reddit/commit/b2e73f1bcc121e9bae67a246dd9e3215a1079d6f
 [123]: https://github.com/express42/reddit/commit/5e011209a92ba5749d6975a2b7cb35aad49e304e
+[124]: https://devops-team-otus.slack.com/apps/A0F7XDUAZ-incoming-webhooks?next_id=0
+[125]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/alertmanager_config.yml
+[126]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/prom_alerts.yml
+[127]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/add_prom_alerts
+[128]: https://api.slack.com/incoming-webhooks
 
 ```
 eval $(docker-machine env docker-host)
@@ -555,3 +560,24 @@ rate(ui_request_count{http_status=~"^[45].*"}[1m])
 histogram_quantile(0.95, sum(rate(ui_request_latency_seconds_bucket[5m])) by (le))
 5) Collecting Buisness metrics
 6) Alerting
+ - build docker image for Prometheus Alertmanager
+```
+cd monitoring/alertmanager/
+docker build -t lain0/alertmanager .
+```
+ - Add New service to docker-compose-monitoring.yml:
+
+7) Alert rules
+ - Build Prometheus image:
+ ```
+ docker build -t lain0/prometheus .
+ ```
+ - Recreate docker monitoring infrastructure:
+ ```
+ cd docker
+ docker-compose -f docker-compose-monitoring.yml down
+ docker-compose -f docker-compose-monitoring.yml up -d
+ ```
+
+8) Push all lain0/* repository to dockerhub
+`make push-dockerhub`
