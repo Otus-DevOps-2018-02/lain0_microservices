@@ -503,7 +503,10 @@ for i in ui post comment prometheus; do docker push $USER_NAME/$i; done
 [115]: https://grafana.com/dashboards
 [116]: https://github.com/express42/reddit/commit/e443f6ab4dcf25f343f2a50c01916d750fc2d096
 [117]: https://github.com/express42/reddit/commit/d8a0316c36723abcfde367527bad182a8e5d9cf2
-
+[118]: https://prometheus.io/docs/concepts/metric_types/
+[119]: https://github.com/prometheus/client_ruby#counter
+[120]: https://prometheus.io/docs/prometheus/latest/querying/functions/
+[121]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/histogram_quantile
 
 ```
 eval $(docker-machine env docker-host)
@@ -543,3 +546,10 @@ cd docker
 docker-compose -f docker-compose-monitoring.yml down
 docker-compose -f docker-compose-monitoring.yml up -d
 ```
+[Histogram][118]
+[Percentile]
+
+rate(ui_request_count[1m])
+rate(ui_request_count{http_status=~"^[200].*"}[1m])
+rate(ui_request_count{http_status=~"^[45].*"}[1m])
+histogram_quantile(0.95, sum(rate(ui_request_latency_seconds_bucket[5m])) by (le))
