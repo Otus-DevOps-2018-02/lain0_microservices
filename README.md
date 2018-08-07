@@ -654,3 +654,4 @@ docker-compose -f docker-compose-logging.yml -f docker-compose.yml up -d
 add json Filters to fluentd.conf and rebuild image:
 ```
 docker build -t $USER_NAME/fluentd logging/fluentd/
+```

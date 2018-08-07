@@ -22,6 +22,11 @@ services:
       - ${UI_HOST_PORT}:${UI_CONTAINER_PORT}/tcp
     networks:
       - front_net
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: service.ui
 
   post:
     build: ../src/post-py
@@ -29,7 +34,7 @@ services:
     image: ${USERNAME}/post:${POST_TAG_VERSION}
     depends_on:
       - post_db
-      - fluentd
+      # - fluentd
     networks:
       back_net:
         aliases:
