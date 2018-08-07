@@ -15,14 +15,19 @@ services:
     # build: ./ui
     container_name: ${COMPOSE_PROJECT_NAME}-${USERNAME}-ui-${UI_TAG_VERSION}
     image: ${USERNAME}/ui:${UI_TAG_VERSION}
+    depends_on:
+      - post_db
     ports:
       - ${UI_HOST_PORT}:${UI_CONTAINER_PORT}/tcp
     networks:
       - front_net
+
   post:
     # build: ./post-py
     container_name: ${COMPOSE_PROJECT_NAME}-${USERNAME}-post-${POST_TAG_VERSION}
     image: ${USERNAME}/post:${POST_TAG_VERSION}
+    depends_on:
+      - post_db
     networks:
       back_net:
         aliases:
@@ -30,6 +35,12 @@ services:
       front_net:
         aliases:
           - post
+    # logging:
+    #   driver: "fluentd"
+    #   options:
+    #     fluentd-address: localhost:24224
+    #     tag: service.post
+
   comment:
     # build: ./comment
     container_name: ${COMPOSE_PROJECT_NAME}-${USERNAME}-comment-${COMMENT_TAG_VERSION}

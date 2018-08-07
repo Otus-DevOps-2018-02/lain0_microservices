@@ -591,6 +591,11 @@ gcloud compute firewall-rules create alertmanager-allow --allow tcp:9093
 [130]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-25/create_docker-machine
 [131]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-25/docker-compose-logging1.yml
 [132]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-25/fluent.conf
+[133]: https://docs.docker.com/config/containers/logging/fluentd/
+[134]: https://docs.fluentd.org/v0.12/articles/in_forward
+[135]: https://docs.fluentd.org/v0.12/articles/out_copy
+[136]: https://gist.githubusercontent.com/chromko/af9ece71017df606cef3ee6229d5a4d5/raw/21672e5326201c9ae3e8d705a9c8e64a4591d90d/gistfile1.txt
+[137]:
 
 1) make docker-host logging:
 ```
@@ -609,8 +614,10 @@ eval $(docker-machine env logging)
 docker-machine ls
 docker-machine ip logging
 ```
-2)  Build new images vs microservices:
+2) Build new images vs microservices:
 ```
+mv src src2
+git clone --single-branch -b logging https://github.com/express42/reddit/tree/logging src
 export USER_NAME=lain0
 for i in ui post-py comment; do cd src/$i; bash docker_build.sh; cd -; done
 ```
@@ -625,5 +632,14 @@ docker build -t $USER_NAME/fluentd .
 ```
 cd docker
 docker-compose up -d
-
+docker-compose -f docker-compose-logging.yml up -d
+docker ps
 ```
+open ports:
+```
+gcloud compute firewall-rules create fluentd-allow --allow tcp:24224
+gcloud compute firewall-rules create fluentd-allow --allow tcp:24224
+```
+[Fluentd logging driver][133]
+
+6) Kibana
