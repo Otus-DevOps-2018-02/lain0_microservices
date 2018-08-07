@@ -597,6 +597,8 @@ gcloud compute firewall-rules create alertmanager-allow --allow tcp:9093
 [136]: https://gist.githubusercontent.com/chromko/af9ece71017df606cef3ee6229d5a4d5/raw/21672e5326201c9ae3e8d705a9c8e64a4591d90d/gistfile1.txt
 [137]:
 
+stop all containers: `docker kill $(docker ps -q)`
+
 1) make docker-host logging:
 ```
 export GOOGLE_PROJECT=docker-211106
@@ -640,6 +642,15 @@ open ports:
 gcloud compute firewall-rules create fluentd-allow --allow tcp:24224
 gcloud compute firewall-rules create fluentd-allow --allow tcp:24224
 ```
+docker-compose logs -f post
+restart vs zipkin service:
+```
+docker-compose -f docker-compose-logging.yml -f docker-compose.yml down
+docker-compose -f docker-compose-logging.yml -f docker-compose.yml up -d
+```
 [Fluentd logging driver][133]
 
 6) Kibana
+add json Filters to fluentd.conf and rebuild image:
+```
+docker build -t $USER_NAME/fluentd logging/fluentd/
