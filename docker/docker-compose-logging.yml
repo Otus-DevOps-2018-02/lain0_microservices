@@ -14,6 +14,7 @@ services:
           - zipkin
 
   fluentd:
+    # build ../logging/fluentd
     image: ${USERNAME}/fluentd
     ports:
       - "24224:24224"

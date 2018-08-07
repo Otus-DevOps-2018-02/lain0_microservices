@@ -597,7 +597,10 @@ gcloud compute firewall-rules create alertmanager-allow --allow tcp:9093
 [136]: https://gist.githubusercontent.com/chromko/af9ece71017df606cef3ee6229d5a4d5/raw/21672e5326201c9ae3e8d705a9c8e64a4591d90d/gistfile1.txt
 [137]: https://gist.githubusercontent.com/chromko/af76301bed8c811c7110033d8d647109/raw/c88c65fa773770dab8a91065c3fe2d94556fb1d9/gistfile1.txt
 
-stop all containers: `docker kill $(docker ps -q)`
+stop all containers:
+```
+docker kill $(docker ps -q)
+```
 
 1) make docker-host logging:
 ```
@@ -633,8 +636,7 @@ docker build -t $USER_NAME/fluentd .
 5) Run microservices && EFK
 ```
 cd docker
-docker-compose up -d
-docker-compose -f docker-compose-logging.yml up -d
+docker-compose -f docker-compose-logging.yml -f docker-compose.yml up -d
 docker ps
 ```
 open ports:
