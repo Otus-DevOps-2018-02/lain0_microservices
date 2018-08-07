@@ -6,8 +6,12 @@ services:
     ports:
       - "9411:9411"
     networks:
-      - front_net
-      - back_net
+      front_net:
+        aliases:
+          - zipkin
+      back_net:
+        aliases:
+          - zipkin
 
   fluentd:
     image: ${USERNAME}/fluentd
@@ -16,6 +20,7 @@ services:
       - "24224:24224/udp"
     networks:
       - back_net
+      - front_net
 
   elasticsearch:
     image: elasticsearch

@@ -595,7 +595,7 @@ gcloud compute firewall-rules create alertmanager-allow --allow tcp:9093
 [134]: https://docs.fluentd.org/v0.12/articles/in_forward
 [135]: https://docs.fluentd.org/v0.12/articles/out_copy
 [136]: https://gist.githubusercontent.com/chromko/af9ece71017df606cef3ee6229d5a4d5/raw/21672e5326201c9ae3e8d705a9c8e64a4591d90d/gistfile1.txt
-[137]:
+[137]: https://gist.githubusercontent.com/chromko/af76301bed8c811c7110033d8d647109/raw/c88c65fa773770dab8a91065c3fe2d94556fb1d9/gistfile1.txt
 
 stop all containers: `docker kill $(docker ps -q)`
 
@@ -651,7 +651,8 @@ docker-compose -f docker-compose-logging.yml -f docker-compose.yml up -d
 [Fluentd logging driver][133]
 
 6) Kibana
-add json Filters to fluentd.conf and rebuild image:
+add json Filters to fluentd.conf and rebuild fluentd image  and restart containers
 ```
 docker build -t $USER_NAME/fluentd logging/fluentd/
+cd docker && docker-compose -f docker-compose-logging.yml up -d
 ```
