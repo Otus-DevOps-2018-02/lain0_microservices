@@ -658,3 +658,10 @@ add json Filters to fluentd.conf and rebuild fluentd image  and restart containe
 docker build -t $USER_NAME/fluentd logging/fluentd/
 cd docker && docker-compose -f docker-compose-logging.yml up -d
 ```
+
+# hw22
+
+[138]: https://gist.githubusercontent.com/chromko/d90b18ed9fac3eba9d19a72deec5d346/raw/dd4261dfb8e1b190f9b7a3d2dca6ce349976052b/gistfile1.txt
+[139]: https://github.com/kelseyhightower/kubernetes-the-hard-way
+
+[kubernetes-the-hard-way][139]

@@ -11,13 +11,13 @@ services:
         aliases:
           - post_db
           - comment_db
+
   ui:
     build: ../src/ui
     container_name: ${COMPOSE_PROJECT_NAME}-${USERNAME}-ui-${UI_TAG_VERSION}
     image: ${USERNAME}/ui:${UI_TAG_VERSION}
     depends_on:
       - post_db
-      # - fluentd
     ports:
       - ${UI_HOST_PORT}:${UI_CONTAINER_PORT}/tcp
     networks:
@@ -34,7 +34,6 @@ services:
     image: ${USERNAME}/post:${POST_TAG_VERSION}
     depends_on:
       - post_db
-      # - fluentd
     networks:
       back_net:
         aliases:
@@ -64,7 +63,6 @@ volumes:
   post_db:
 
 networks:
-  # reddit:
   back_net:
     driver: bridge
     ipam:
