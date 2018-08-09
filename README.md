@@ -667,7 +667,7 @@ cd docker && docker-compose -f docker-compose-logging.yml up -d
 [kubernetes-the-hard-way][139]
 
 
-# TEST k8s applications:
+# TEST k8s applications `kubectl apply -f ./kubernetes/reddit` :
 ```
 kubectl apply -f comment-deployment.yml
 kubectl apply -f ui-deployment.yml
@@ -683,6 +683,13 @@ kubectl get pods -o wide
 [140]: https://kubernetes.io/docs/tasks/tools/install-kubectl/
 [141]: https://www.virtualbox.org/wiki/Downloads
 [142]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/minikube-install-linux
+[143]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/ui-deployment.yml
+[144]: https://gist.githubusercontent.com/chromko/0a120bc15784da4ef19f82f32f0b049e/raw/b8d709c06dfa7c6facad52ad4c3931e62e61d305/gistfile1.txt
+[145]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/comment-deployment-with-db.yml
+[146]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/mongo-deployment-with-volume.yml
+[147]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/comment-service.yml
+[148]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/mongodb-service.yml
+[149]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/comment-mongodb-service.yml
 
 1) Install kubectl and Minukube
 ```
@@ -701,3 +708,121 @@ kubectl get nodes
     - cluster - API-server
     - user - user to connect to cluster
     - namespace
+- cluster:
+    - server - kubernetes API server's address
+    - certificate-authority - root certificate
+  name - identification name in config file
+- user: auth credentials
+    - username + password (Basic Auth
+    - client key + client certificate
+    - token
+    - auth-provider config (GCP)
+  name - identification name in config file
+- context:
+    - cluster - cluste rname
+    - user - user name
+    - namespace
+  name
+4) Kubectl configure:
+- Create cluster:
+```
+kubectl config set-cluster ... cluster_name
+```
+- Create credentials:
+```
+kubectl config set-credentials ... user_name
+```
+- Create context:
+```
+kubectl config set-context context_name \
+  --cluster=cluster_name \
+  --user=user_name
+```
+- Use context:
+```
+kubectl config use-context context_name
+```
+- Know current context:
+```
+kubectl config current-context
+```
+- All context list
+```
+kubectl config get-contexts
+```
+5) Run application:
+6) Deployment
+6.1) [ui deployment][143]
+- Run ui-component:
+```
+{
+cd kubernetes/reddit
+kubectl apply -f ui-deployment.yml
+}
+```
+- list replics:
+```
+kubectl get deployment
+```
+- list ui pods:
+```
+kubectl get pods --selector component=ui
+```
+- port forwarding:
+```
+kubectl port-forward <pod-name> 8080:9292
+```
+```
+curl localhost:9292/healthcheck
+```
+6.2) [Comment deployment][144]
+```
+{
+cd kubernetes/reddit
+kubectl apply -f comment-deployment.yml
+kubectl get deployment
+kubectl get pods --selector component=comment
+}
+```
+- port forwarding:
+```
+kubectl port-forward <pod-name> 8181:9292
+curl localhost:8181/healthcheck
+```
+6.3) Post deployment
+- Run post-component:
+```
+{
+cd kubernetes/reddit
+kubectl apply -f post-deployment.yml
+kubectl port-forward <pod-name> 8282:5000
+curl localhost:8282/healthcheck
+}
+```
+6.4) [Mongo deployment][146]
+- mount volume outside container
+6.5) Services
+- make comment service available by name from any pods by adding it's to services:
+```
+kubectl apply -f comment-service.yml
+```
+- list endpoints vs somponent comment
+```
+kubectl describe service comment | grep Endpoints
+kubectl exec -ti <pod-name> nslookup comment
+```
+```
+kubectl apply -f post-service.yml
+kubectl apply -f mongo-service.yml
+kubectl apply -f comment-mongodb-service.yml
+kubectl apply -f post-mongodb-service.yml
+```
+
+minikube service ui
+```
+minikube services list
+```
+7) Namespaces
+- default
+- kube-system
+- kube-public
