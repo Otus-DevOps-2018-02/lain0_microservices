@@ -659,7 +659,7 @@ docker build -t $USER_NAME/fluentd logging/fluentd/
 cd docker && docker-compose -f docker-compose-logging.yml up -d
 ```
 
-# hw22
+# hw22 Kubernetes
 
 [138]: https://gist.githubusercontent.com/chromko/d90b18ed9fac3eba9d19a72deec5d346/raw/dd4261dfb8e1b190f9b7a3d2dca6ce349976052b/gistfile1.txt
 [139]: https://github.com/kelseyhightower/kubernetes-the-hard-way
@@ -678,3 +678,26 @@ kubectl apply -f mongo-deployment.yml
 ```
 kubectl get pods -o wide
 ```
+
+# hw23 Kubernetes Controllers Security
+[140]: https://kubernetes.io/docs/tasks/tools/install-kubectl/
+[141]: https://www.virtualbox.org/wiki/Downloads
+[142]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/minikube-install-linux
+
+1) Install kubectl and Minukube
+```
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.27.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+```
+2) Run Minukube Cluster:
+```
+minikube start
+```
+3) Kubectl:
+- k8s node list
+```
+kubectl get nodes
+```
+- k8s context `~/.kube/config`:
+    - cluster - API-server
+    - user - user to connect to cluster
+    - namespace
