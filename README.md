@@ -665,3 +665,16 @@ cd docker && docker-compose -f docker-compose-logging.yml up -d
 [139]: https://github.com/kelseyhightower/kubernetes-the-hard-way
 
 [kubernetes-the-hard-way][139]
+
+
+# TEST k8s applications:
+```
+kubectl apply -f comment-deployment.yml
+kubectl apply -f ui-deployment.yml
+kubectl apply -f post-deployment.yml
+kubectl apply -f mongo-deployment.yml
+```
+
+```
+kubectl get pods -o wide
+```
