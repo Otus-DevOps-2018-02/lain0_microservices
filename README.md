@@ -877,4 +877,3 @@ kubectl describe service ui -n dev |grep NodePort
 
 [152]: http://35.240.30.72:32092/
 [gke_link:32092][152]
-![GKE screenshot vs reddit](https://github.com/Otus-DevOps-2018-02/lain0_microservices/blob/kubernetes-2/kubernetes/hw23/gke-reddit-dev.png)
