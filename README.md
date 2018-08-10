@@ -898,6 +898,7 @@ kubectl create clusterrolebinding kubernetes-dashboard  --clusterrole=cluster-ad
 [156]: https://gist.githubusercontent.com/chromko/6d81bb41fe4c53e68fbff1275bab3fdb/raw/b911965be9c5ddf4e077d147701d89426bf94317/gistfile1.txt
 [157]: https://gist.githubusercontent.com/chromko/c4cc151951fba9bb7481539e64bf93fc/raw/b3acc55ca3de3349a7511d75488606075503919b/gistfile1.txt
 [158]: https://console.cloud.google.com/networking/routes/
+[159]: https://gist.githubusercontent.com/chromko/831d9466f5100bc2f6556091739a4e32/raw/6364f1339453d701e7b7fa8d30bcbe8af791ef1d/gistfile1.txt
 
 - Ingress Controller
 1) [Service][154]: - describe `endpoints`
@@ -937,10 +938,15 @@ kubectl apply -f ui-service.yml -n dev
 kubectl get service  -n dev --selector component=ui
 ```
 http://node_ip:31861/
-- Ingress
+- Ingress uses Ingress Controller plugin (POD)
+make ingress for ui service:
+```
+kubectl apply -f ui-ingress.yml -n dev
+```
 
-
-
+```
+kubectl get ingress -n dev
+```
 
 
 
