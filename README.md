@@ -891,3 +891,68 @@ kubectl proxy
 ```
 kubectl create clusterrolebinding kubernetes-dashboard  --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
 ```
+
+# hw24 Kubernetes Network Storage
+[154]: https://kubernetes.io/docs/tutorials/services/
+[155]: https://gist.githubusercontent.com/chromko/487944706c6c438a7049bbcdae62d5c8/raw/ca6c04158888ecd0ab3a51459a701c04ac9996d3/gistfile1.txt
+[156]: https://gist.githubusercontent.com/chromko/6d81bb41fe4c53e68fbff1275bab3fdb/raw/b911965be9c5ddf4e077d147701d89426bf94317/gistfile1.txt
+[157]: https://gist.githubusercontent.com/chromko/c4cc151951fba9bb7481539e64bf93fc/raw/b3acc55ca3de3349a7511d75488606075503919b/gistfile1.txt
+[158]: https://console.cloud.google.com/networking/routes/
+
+- Ingress Controller
+1) [Service][154]: - describe `endpoints`
+service:
+  type:
+    - nodePort - source NAT’d
+    - LoadBalancer - source NAT’d and uses LoadBalancer
+    - ClusterIP - never source NAT’d, awailable anly inside cluster or by kube-proxy, this type is by default
+    - ExternalName - cluster external resourse
+
+ClusterIP - virtual IP addeess, only for work inside cluster
+```
+kubectl get services -n dev
+```
+2) Kube-dns uses plugin - kube-dns POD
+- lets try to turn off kube-dns-autoscaler and kube-dns to see pods can't resolve
+```
+kubectl scale deployment --replicas 0 -n kube-system kube-dns-autoscaler
+kubectl scale deployment --replicas 0 -n kube-system kube-dns
+```
+- enshure pods can't resolve
+```
+kubectl get pods -o wide -n dev
+kubectl exec -ti -n dev pods_name ping comment
+```
+- set kube-dns-autoscaler and kube-dns to 1
+```
+kubectl scale deployment --replicas 1 -n kube-system kube-dns-autoscaler
+```
+- network routes:
+```
+gcloud compute routes list --filter gke
+```
+- LoadBalancer
+```
+kubectl apply -f ui-service.yml -n dev
+kubectl get service  -n dev --selector component=ui
+```
+http://node_ip:31861/
+- Ingress
+
+
+
+
+
+
+
+
+
+
+
+
+- Secret
+- TLS
+- LoadBalancer Service
+- Network Policies
+- PersistentVolumes
+- PersistentVolumeClaims
