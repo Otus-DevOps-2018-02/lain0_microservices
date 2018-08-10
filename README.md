@@ -866,4 +866,14 @@ kubectl apply -f ./kubernetes/reddit/dev-namespace.yml
 ```
 kubectl apply -f ./kubernetes/reddit/ -n dev
 ```
-- create firewall-rules to open ports
+- create firewall-rules to open ports in web browser
+- see project firewall-rules
+```
+gcloud compute firewall-rules list --filter network=default --filter gke-cluster1
+```
+```
+kubectl describe service ui -n dev |grep NodePort
+```
+
+[152]: http://35.240.30.72:32092/
+[gke_link:32092][152]
