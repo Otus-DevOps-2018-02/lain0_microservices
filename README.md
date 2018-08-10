@@ -876,4 +876,18 @@ kubectl describe service ui -n dev |grep NodePort
 ```
 
 [152]: http://35.240.30.72:32092/
+
 [gke_link:32092][152]
+
+[153]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/kubectl-create-clusterrolebinding
+
+12) Security:
+- open locally http://127.0.0.1:ui:8001
+```
+kubectl proxy
+```
+- RBAC authorization requires higher ClusterRole access rights, we can assign role `cluster-admin`
+
+```
+kubectl create clusterrolebinding kubernetes-dashboard  --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
+```
