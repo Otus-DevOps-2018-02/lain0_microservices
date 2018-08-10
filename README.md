@@ -690,10 +690,12 @@ kubectl get pods -o wide
 [147]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/comment-service.yml
 [148]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/mongodb-service.yml
 [149]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/comment-mongodb-service.yml
+[150]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/ui-deployment-with-env.yml
+[151]: https://console.cloud.google.com/home/dashboard?project=reddit-kubernates&authuser=1
 
 1) Install kubectl and Minukube
 ```
-curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.27.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.28.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
 ```
 2) Run Minukube Cluster:
 ```
@@ -820,9 +822,30 @@ kubectl apply -f post-mongodb-service.yml
 
 minikube service ui
 ```
-minikube services list
+minikube service list
 ```
 7) Namespaces
-- default
-- kube-system
-- kube-public
+- default - vs local namespace only
+- kube-system - objects made by k8s for it's own
+- kube-public - global objects visible from al cluster
+
+```
+kubectl get all -n kube-system
+kubectl get all -n kube-system --selector k8s-app=kubernetes-dashboard
+```
+8) Dashboard
+open dashboard:
+```
+minikube service kubernetes-dashboard -n kube-system
+```
+9) Create dev namespace
+```
+kubectl apply -f dev-namespace.yml
+```
+run app in dev namespace:
+```
+kubectl apply -f ui-deployment.yml -n dev
+minikube service ui -n dev
+```
+10) Google Kubernetes Engine.
+- In web browser [create kubernetes cluster][151]
