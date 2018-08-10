@@ -849,3 +849,21 @@ minikube service ui -n dev
 ```
 10) Google Kubernetes Engine.
 - In web browser [create kubernetes cluster][151]
+- Connect to the cluster:
+```
+gcloud container clusters get-credentials gke-cluster1 --zone europe-west1-d --project reddit-kubernates
+```
+- know kubernetes current-context
+```
+kubectl config current-context
+```
+11) Deploy Reddit to GKE:
+- create namespace dev:
+```
+kubectl apply -f ./kubernetes/reddit/dev-namespace.yml
+```
+- deploy reddit in namespace dev
+```
+kubectl apply -f ./kubernetes/reddit/ -n dev
+```
+- create firewall-rules to open ports
