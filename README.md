@@ -900,6 +900,9 @@ kubectl create clusterrolebinding kubernetes-dashboard  --clusterrole=cluster-ad
 [158]: https://console.cloud.google.com/networking/routes/
 [159]: https://gist.githubusercontent.com/chromko/831d9466f5100bc2f6556091739a4e32/raw/6364f1339453d701e7b7fa8d30bcbe8af791ef1d/gistfile1.txt
 [160]: https://gist.githubusercontent.com/chromko/a1886f32e4df7adbfc30f2d796415ee5/raw/d970a123cdf85a512fac4a363dbcd756a7be8e37/gistfile1.txt
+[161]: https://gist.githubusercontent.com/chromko/ffc6c3f948520fad2ded3c41b392250f/raw/28d804b60da6ecdff53fd2a20d847877c27c2089/gistfile1.txt
+[162]: https://gist.githubusercontent.com/chromko/f331ea52db3a5aef2b13bc34ebeb7e35/raw/541e44393d5a89440b61334cbb981a9265daf92b/gistfile1.txt
+[163]: https://gist.githubusercontent.com/chromko/cbf98525f8d8a29ca0882b7a4c495278/raw/178e0a2c7fd7d6feb64eaecbb32e75e76297b218/gistfile1.txt
 
 - Ingress Controller
 1) [Service][154]: - describe `endpoints`
@@ -992,9 +995,13 @@ gcloud beta container clusters update $CLUSTER_NAME \
 gcloud beta container clusters update $CLUSTER_NAME \
 --zone=europe-west1-d  --enable-network-policy
 ```
-
-
-
-
 - PersistentVolumes
+    - create new GCP drive:
+```
+gcloud compute disks create --size=25GB --zone=europe-west1-d reddit-mongo-disk
+```
+    - add, mount new volume for mondoDB POD:
+```
+kubectl apply -f mongo-deployment.yml -n dev
+```
 - PersistentVolumeClaims
