@@ -907,6 +907,9 @@ kubectl create clusterrolebinding kubernetes-dashboard  --clusterrole=cluster-ad
 [165]: https://gist.githubusercontent.com/chromko/18a31a48c91e4279d9a316d053832502/raw/c5e2e55a4375a8e6446427d4dc78892b014380c8/gistfile1.txt
 [166]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-30/mongo-claim.yml
 [167]: https://gist.githubusercontent.com/vitkhab/93f2e55054bdfd270e1516eccb36087d/raw/d63752c3751d1d25d42da2f2e64a2bd5426800fc/mongo-deployment.yml
+[168]: https://gist.githubusercontent.com/chromko/4b10311b4470dd18770eda02179e43b2/raw/ea2af8a63cc527281e8e14c144726127a0941a2b/gistfile1.txt
+[169]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-30/mongo-claim-dynamic.yml
+[170]: https://gist.githubusercontent.com/vitkhab/820cc6338912514a7be23127be2726f4/raw/36f59db420ee5da941b0602b86b0550ac68be181/mongo-deployment.yml
 
 - Ingress Controller
 1) [Service][154]: - describe `endpoints`
@@ -1028,4 +1031,22 @@ kubectl describe storageclass standard -n dev
     - add new PVC to mongo POD:
 ```
 kubectl apply -f mongo-deployment.yml -n dev
+```
+- StorageClass
+add fast ssd starage for mongodb volume
+```
+kubectl apply -f storage-fast.yml -n dev
+```
+- PVC + StorageClass
+add StorageClass to cluster
+```
+kubectl apply -f mongo-claim-dynamic.yml -n dev
+```
+connect PVC to our pods
+```
+kubectl apply -f mongo-deployment.yml -n dev
+```
+list all PersistentVolumes
+```
+kubectl get persistentvolume -n dev
 ```
