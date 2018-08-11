@@ -947,8 +947,14 @@ kubectl apply -f ui-ingress.yml -n dev
 ```
 kubectl get ingress -n dev
 ```
-
-
+change type back to NodePort:
+```
+kubectl apply -f ui-service.yml -n dev
+```
+make Ingress Controller act as classic web
+```
+kubectl apply -f ui-ingress.yml -n dev
+```
 
 
 
@@ -957,6 +963,27 @@ kubectl get ingress -n dev
 
 
 - Secret
+```
+kubectl get ingress -n dev
+```
+make certificate:
+```
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=35.227.193.11"
+
+```
+upload certificate
+```
+kubectl create secret tls ui-ingress --key tls.key --cert tls.crt -n dev
+```
+test
+```
+kubectl describe secret ui-ingress -n dev
+```
+disable TLS Termination:
+```
+kubectl apply -f ui-ingress.yml -n dev
+```
+
 - TLS
 - LoadBalancer Service
 - Network Policies
