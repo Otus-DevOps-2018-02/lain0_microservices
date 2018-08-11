@@ -899,6 +899,7 @@ kubectl create clusterrolebinding kubernetes-dashboard  --clusterrole=cluster-ad
 [157]: https://gist.githubusercontent.com/chromko/c4cc151951fba9bb7481539e64bf93fc/raw/b3acc55ca3de3349a7511d75488606075503919b/gistfile1.txt
 [158]: https://console.cloud.google.com/networking/routes/
 [159]: https://gist.githubusercontent.com/chromko/831d9466f5100bc2f6556091739a4e32/raw/6364f1339453d701e7b7fa8d30bcbe8af791ef1d/gistfile1.txt
+[160]: https://gist.githubusercontent.com/chromko/a1886f32e4df7adbfc30f2d796415ee5/raw/d970a123cdf85a512fac4a363dbcd756a7be8e37/gistfile1.txt
 
 - Ingress Controller
 1) [Service][154]: - describe `endpoints`
@@ -955,13 +956,6 @@ make Ingress Controller act as classic web
 ```
 kubectl apply -f ui-ingress.yml -n dev
 ```
-
-
-
-
-
-
-
 - Secret
 ```
 kubectl get ingress -n dev
@@ -983,9 +977,24 @@ disable TLS Termination:
 ```
 kubectl apply -f ui-ingress.yml -n dev
 ```
-
 - TLS
 - LoadBalancer Service
 - Network Policies
+    - know cluster name:
+```
+gcloud beta container clusters list
+```
+    - enable NetworkPolicy for GKE:
+```
+export CLUSTER_NAME=gke-cluster1
+gcloud beta container clusters update $CLUSTER_NAME \
+--zone=europe-west1-d --update-addons=NetworkPolicy=ENABLED
+gcloud beta container clusters update $CLUSTER_NAME \
+--zone=europe-west1-d  --enable-network-policy
+```
+
+
+
+
 - PersistentVolumes
 - PersistentVolumeClaims
