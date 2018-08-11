@@ -917,7 +917,7 @@ service:
   type:
     - nodePort - source NAT’d
     - LoadBalancer - source NAT’d and uses LoadBalancer
-    - ClusterIP - never source NAT’d, awailable anly inside cluster or by kube-proxy, this type is by default
+    - ClusterIP - never source NAT’d, awailable only inside cluster or by kube-proxy, this type is by default
     - ExternalName - cluster external resourse
 
 ClusterIP - virtual IP addeess, only for work inside cluster
