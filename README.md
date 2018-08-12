@@ -1050,3 +1050,69 @@ list all PersistentVolumes
 ```
 kubectl get persistentvolume -n dev
 ```
+
+# hw25 Kubernetes Helm CI-CD
+[171]: https://github.com/helm/helm/releases
+[172]: https://gist.githubusercontent.com/chromko/1340b81ef20248d62e136d30c00b6b78/raw/947c8acb5620a51664c4a5c131c41ea0106503de/gistfile1.txt
+[173]: https://gist.githubusercontent.com/chromko/9c78dab140a134feed10214838ee2d39/raw/f600ab1fe48d279c257df6643e4ddae318d3c597/gistfile1.txt
+[174]: https://gist.githubusercontent.com/chromko/84fd28d6e8069027018685be718aa406/raw/02d96cc24aecb1b1d1857662cd458f8d5c488368/gistfile1.txt
+[175]: https://gist.githubusercontent.com/chromko/3382bf310ab507260b12202cd2131382/raw/cace8a8fe4d514393f9b58d444e08a0ee5dc6184/gistfile1.txt
+[176]: https://docs.helm.sh/chart_template_guide/#the-chart-template-developer-s-guide
+
+- [Helm][171] - server-client packet manager for k8s
+    - Standardize application delivery to k8s
+    - Declare infrastructure
+    - Deploy new aplication versions
+
+1) Apply tiller manifest
+```
+kubectl apply -f tiller.yml
+```
+2) Run tiller-server
+```
+helm init --service-account tiller
+```
+3) list server helm running:
+```
+kubectl get pods -n kube-system --selector app=helm
+```
+4) Charts
+make Templates for installing application
+delete k8s ui component:
+```
+kubectl delete deploy ui -n dev
+```
+install ui by helm:
+```
+helm install --name test-ui-1 ui/
+helm install ui --name ui-1
+helm install ui --name ui-2
+helm install ui --name ui-3
+kubectl get ingress
+```
+```
+helm upgrade ui-1 ui/
+helm upgrade ui-2 ui/
+helm upgrade ui-3 ui
+```
+- Template in heml
+
+- make tgz repository
+```
+helm dep update
+```
+- find mongo in charm repository:
+```
+helm search mongo
+```
+- add mongo link to requirments and upload helm dependencies:
+```
+helm dep update
+```
+- install reddit app:
+```
+helm install reddit --name reddit-test
+```
+
+- Gitlab in k8s
+- CI/CD in k8s
