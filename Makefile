@@ -1,5 +1,6 @@
 #
 export USER_NAME = lain0
+export BUILD = $(git rev-parse --abbrev-ref HEAD)
 
 # HELP
 # This will output the help for each task
@@ -37,7 +38,7 @@ push-dockerhub:
 	docker images --format "{{.Repository}}"|grep lain0 |uniq | xargs -I image_name docker push image_name:latest
 
 tag: ## add tag rc
-	docker images --format "{{.Repository}}"|grep lain0 |uniq | xargs -I image_name docker tag image_name:rc
+	docker images --format "{{.Repository}}"|grep lain0 |uniq | xargs -I image_name docker tag image_name:latest image_name:
 
 up: ## docker-compose up -d
 	cd docker && docker-compose up -d

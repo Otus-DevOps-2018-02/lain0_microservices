@@ -1,5 +1,6 @@
 FROM alpine:3.7
 
+# RUN apk add --no-cache ruby-bundler ruby-dev ruby-json alpine-sdk && gem install bundler --no-ri --no-rdoc
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
 
@@ -7,14 +8,10 @@ WORKDIR $APP_HOME
 # ADD Gemfile* $APP_HOME/
 COPY . $APP_HOME/
 
-# RUN mkdir -p /usr/local/etc \
-#     && { \
-#         echo 'install: --no-document'; \
-#         echo 'update: --no-document'; \
-#     } >> /usr/local/etc/gemrc
+# RUN bundle install
 RUN apk --no-cache add ruby ruby-io-console \
-    && apk --no-cache add --virtual build-dependencies ruby-dev ruby-bundler build-base \
-    && bundle install && bundle clean --force\
+    && apk --no-cache add --virtual build-dependencies ruby-dev build-base alpine-sdk && gem install bundler --no-ri --no-rdoc \
+    && bundle install \
     && apk del build-dependencies \
     && rm -rf /usr/lib/ruby/gems/*/cache/* \
       /var/cache/apk/* \

@@ -113,7 +113,7 @@ all changes removed
 `docker run --name reddit --rm -it <your-login>/otus-reddit:1.0 bash`
   - ls /
 
-# hw15 Docker Images Microservices
+## hw15 Docker Images Microservices
 [79]: https://github.com/hadolint/hadolint
 [80]: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
 [81]: https://github.com/express42/reddit/archive/microservices.zip
@@ -198,7 +198,7 @@ docker run -d --network=reddit -p 9292:9292 lain0/ui:2.0
 alpine 3.8 not working va my Dockerfiles
 fixed show.haml file - aded required=>true in no_name_value or no_comment_value
 
-# hw16 Docker-compose networking docker image testing
+## hw16 Docker-compose networking docker image testing
 [89]: https://docs.docker.com/compose/install/#install-compose
 [90]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-17/docker-compose.yml
 [91]: https://docs.docker.com/compose/compose-file/
@@ -295,7 +295,7 @@ tree -a
 └── docker-compose.yml
 ```
 
-# hw17 GitlabCI Continuos Integration
+## hw17 GitlabCI Continuos Integration
 
 [93]: https://docs.gitlab.com/ce/install/requirements.html
 [94]: https://docs.gitlab.com/omnibus/README.html
@@ -388,7 +388,7 @@ docker run --rm -t -i -v /path/to/config:/etc/gitlab-runner --name gitlab-runner
   --locked="false"
   ```
 
-# hw18 Gitlab-ci CD
+## hw18 Gitlab-ci CD
 
 [100]: https://docs.gitlab.com/ee/ci/environments.html
 
@@ -427,7 +427,7 @@ docker run --rm -t -i -v /srv/gitlab-runner/config:/etc/gitlab-runner --name git
 
 3) Dev enviroment, [Dynamic env][100]
 
-# hw19 Prometheus
+## hw19 Prometheus
 
 [101]: https://gist.github.com/Nklya/1752e865d2fab92402f6413cb00bf2ca
 [102]: https://gist.github.com/Nklya/bfe2d817f72bc6376fb7d05507e97a1d
@@ -496,7 +496,7 @@ for i in ui post comment prometheus; do docker push $USER_NAME/$i; done
 
  [Dockerhub account lain0](https://hub.docker.com/u/lain0/)
 
-# hw20 Monitoring infrastructure Alerting
+## hw20 Monitoring infrastructure Alerting
 [112]: https://github.com/google/cadvisor
 [113]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/add_cadvisor
 [114]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/add_grafana
@@ -584,3 +584,77 @@ gcloud compute firewall-rules create alertmanager-allow --allow tcp:9093
 `make push-dockerhub`
 
  [Dockerhub account lain0](https://hub.docker.com/u/lain0/)
+
+## hw21 Logging ELK
+
+[129]: https://github.com/express42/reddit/tree/logging
+[130]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-25/create_docker-machine
+[131]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-25/docker-compose-logging1.yml
+[132]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-25/fluent.conf
+[133]: https://docs.docker.com/config/containers/logging/fluentd/
+[134]: https://docs.fluentd.org/v0.12/articles/in_forward
+[135]: https://docs.fluentd.org/v0.12/articles/out_copy
+[136]: https://gist.githubusercontent.com/chromko/af9ece71017df606cef3ee6229d5a4d5/raw/21672e5326201c9ae3e8d705a9c8e64a4591d90d/gistfile1.txt
+[137]: https://gist.githubusercontent.com/chromko/af76301bed8c811c7110033d8d647109/raw/c88c65fa773770dab8a91065c3fe2d94556fb1d9/gistfile1.txt
+
+stop all containers:
+```
+docker kill $(docker ps -q)
+```
+
+1) make docker-host logging:
+```
+export GOOGLE_PROJECT=docker-211106
+docker-machine create --driver google \
+--google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
+--google-machine-type n1-standard-1 \
+--google-open-port 5601/tcp \
+--google-open-port 9292/tcp \
+--google-open-port 9411/tcp \
+logging
+```
+
+```
+eval $(docker-machine env logging)
+docker-machine ls
+docker-machine ip logging
+```
+2) Build new images vs microservices:
+```
+mv src src2
+git clone --single-branch -b logging https://github.com/express42/reddit/tree/logging src
+export USER_NAME=lain0
+for i in ui post-py comment; do cd src/$i; bash docker_build.sh; cd -; done
+```
+3) Docker-Containers Logging vs `docker-compose-logging.yml`
+4) Fluentd
+ - Build Fluentd image:
+```
+export USER_NAME=lain0
+docker build -t $USER_NAME/fluentd .
+```
+5) Run microservices && EFK
+```
+cd docker
+docker-compose -f docker-compose-logging.yml -f docker-compose.yml up -d
+docker ps
+```
+open ports:
+```
+gcloud compute firewall-rules create fluentd-allow --allow tcp:24224
+gcloud compute firewall-rules create fluentd-allow --allow tcp:24224
+```
+docker-compose logs -f post
+restart vs zipkin service:
+```
+docker-compose -f docker-compose-logging.yml -f docker-compose.yml down
+docker-compose -f docker-compose-logging.yml -f docker-compose.yml up -d
+```
+[Fluentd logging driver][133]
+
+6) Kibana
+add json Filters to fluentd.conf and rebuild fluentd image  and restart containers
+```
+docker build -t $USER_NAME/fluentd logging/fluentd/
+cd docker && docker-compose -f docker-compose-logging.yml up -d
+```
