@@ -1,0 +1,25 @@
+REPOSITORY              TAG                 IMAGE ID            CREATED             SIZE
+lain0/ubuntu-tmp-file   latest              7902c921813a        3 minutes ago       115MB
+ubuntu                  16.04               e13f3d529b1a        5 days ago          115MB
+hello-world             latest              2cb0d9787c4d        11 days ago         1.85kB
+bbinet/teamviewer       latest              0ef9264cc44f        3 months ago        476MB
+bbinet/teamviewer       <none>              5ff96f406fd7        3 months ago        476MB
+debian                  stable              288d223af7a5        4 months ago        100MB
+debian                  sid                 bcec0ae8107e        4 months ago        106MB
+debian                  jessie              5dd74d62fab8        4 months ago        123MB
+gitlab/gitlab-ce        latest              feb7897eccfa        5 months ago        1.41GB
+<none>                  <none>              c39a0fc274d6        5 months ago        366MB
+gitlab/gitlab-runner    latest              75d6cae37cad        6 months ago        422MB
+mongo                   latest              0f57644645eb        6 months ago        366MB
+debian                  jessie-slim         d086c1dfff1f        7 months ago        79.1MB
+mysql_mysql             latest              90614393dc3b        9 months ago        292MB
+mysql                   5.5                 b5c2178101be        10 months ago       257MB
+mysql                   5.7                 b4e78b89bcf3        10 months ago       412MB
+
+#######################################################
+docker inspect image_id
+docker inspect 7902
+
+
+docker inspect container_id
+docker inspect 4ab
