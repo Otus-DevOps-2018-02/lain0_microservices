@@ -197,3 +197,100 @@ docker run -d --network=reddit -p 9292:9292 lain0/ui:2.0
 
 alpine 3.8 not working va my Dockerfiles
 fixed show.haml file - aded required=>true in no_name_value or no_comment_value
+
+# hw16 Docker-compose networking docker image testing
+[89]: https://docs.docker.com/compose/install/#install-compose
+[90]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-17/docker-compose.yml
+[91]: https://docs.docker.com/compose/compose-file/
+[92]: https://docs.docker.com/compose/networking/
+
+1) [Networking][92]
+```
+docker-machine ls
+eval $(docker-machine env docker-host)
+```
+- net none
+```
+docker run --network none --rm -d --name net_test joffotron/docker-net-tools -c "sleep 100"
+docker exec -ti net_test ifconfig
+```
+- net host
+```
+docker run --network host --rm -d --name net_test joffotron/docker-net-tools -c "sleep 100"
+docker exec -ti net_test ifconfig
+```
+```
+docker run --network host -d nginx
+docker kill $(docker ps -q)
+```
+use ip net-namespaces
+```
+docker-machine ssh docker-host
+sudo ln -s /var/run/docker/netns /var/run/netns
+sudo ip netns ls
+sudo ip netns exec default netstat -tulpn
+```
+- net bridge
+create docker bridge `docker network create reddit --driver bridge`
+use `--name <name>` for one name
+use `--network-alias <alias-name>` for muiti alias names
+```
+docker run -d --network=reddit --network-alias=post_db --network-alias=comment_db  -v reddit_db:/data/db mongo:latest
+docker run -d --network=reddit --name post lain0/post:1.0
+docker run -d --network=reddit --name comment lain0/comment:13.0
+docker run -d --network=reddit -p 9292:9292 lain0/ui:12.0
+```
+make two docker networks:
+```
+docker kill $(docker ps -q)
+docker network create back_net --subnet=10.0.2.0/24
+docker network create front_net --subnet=10.0.1.0/24
+
+docker run -d --network=front_net -p 9292:9292 --name ui  lain0/ui:12.0
+docker run -d --network=back_net --name comment  lain0/comment:13.0
+docker run -d --network=back_net --name post  lain0/post:1.0
+docker run -d --network=back_net --name mongo_db --network-alias=post_db --network-alias=comment_db -v reddit_db:/data/db mongo:latest
+```
+connect more network to containers:
+`docker network connect <network> <container>`
+```
+docker network connect front_net post
+docker network connect front_net comment
+```
+install `bridge-utils` on docker-host
+```
+docker-machine ssh docker-host
+sudo apt-get update && sudo apt-get install bridge-utils
+docker network ls
+docker network inspect back_net
+docker network inspect front_net
+ifconfig | grep br
+brctl show bridgename
+sudo iptables -nL -t nat
+ps ax | grep docker-proxy
+```
+2) [Docker-compose][89]
+`pip install docker-compose`
+```
+docker kill $(docker ps -q)
+export USERNAME=lain0
+docker-compose up -d
+docker-compose ps
+```
+```
+docker network rm back_net
+docker network rm front_net
+docker-compose up -d
+docker-compose ps
+```
+Docker-composer project name can be defined
+- vs ENV - `COMPOSE_PROJECT_NAME`
+- vs docker-compose cli env option `-p` / `--project-name`
+- vs
+```
+tree -a
+.
+├── .docker-compose
+│   └── project-name
+└── docker-compose.yml
+```
