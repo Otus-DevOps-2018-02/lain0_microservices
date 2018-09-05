@@ -294,3 +294,96 @@ tree -a
 │   └── project-name
 └── docker-compose.yml
 ```
+
+# hw17 GitlabCI Continuos Integration
+
+[93]: https://docs.gitlab.com/ce/install/requirements.html
+[94]: https://docs.gitlab.com/omnibus/README.html
+[95]: https://docs.gitlab.com/omnibus/docker/README.html
+[96]: https://gist.github.com/Nklya/c2ca40a128758e2dc2244beb09caebe1
+[97]: https://gist.github.com/Nklya/ab352648c32492e6e9b32440a79a5113
+[98]: https://gist.github.com/Nklya/d70ff7c6d1c02de8f18bcd049e904942
+[99]: https://docs.gitlab.com/runner/register/
+
+1) Installation GitlabCI
+We create new GCP machine vs:
+  * 1 CPU
+  * 3.75GB RAM
+  * 50-100 GB HDD
+  * Ubuntu 16.04
+
+```
+export GOOGLE_PROJECT=docker-211106
+docker-machine create --driver google \
+  --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
+  --google-machine-type n1-standard-1 \
+  --google-zone europe-west1-b \
+  --google-disk-size 75 \
+  gitlab-host
+eval $(docker-machine env gitlab-host)
+docker-machine ls
+```
+open gce ports tcp:80, tcp:443 tcp:2222
+```
+gcloud compute firewall-rules create allow-80-http \
+--allow tcp:80 \
+--target-tags=docker-machine \
+--description="Allow gitlab_container_http" \
+--direction=INGRESS
+
+gcloud compute firewall-rules create allow-https \
+--allow tcp:443 \
+--target-tags=docker-machine \
+--description="Allow gitlab_container_https" \
+--direction=INGRESS
+
+gcloud compute firewall-rules create allow-ssh-2222 \
+--allow tcp:2222 \
+--target-tags=docker-machine \
+--description="Allow gitlab_container_ssh" \
+--direction=INGRESS
+```
+
+
+```
+sudo docker run --detach \
+    --hostname gitlab.example.com \
+    --publish 443:443 --publish 80:80 --publish 2222:22 \
+    --name gitlab \
+    --restart always \
+    --volume /srv/gitlab/config:/etc/gitlab \
+    --volume /srv/gitlab/logs:/var/log/gitlab \
+    --volume /srv/gitlab/data:/var/opt/gitlab \
+    gitlab/gitlab-ce:latest
+```
+docker-compose up -d
+
+2) Install Gitlab Runner:
+```
+docker run -d --name gitlab-runner --restart always \
+-v /srv/gitlab-runner/config:/etc/gitlab-runner \
+-v /var/run/docker.sock:/var/run/docker.sock \
+gitlab/gitlab-runner:latest
+```
+3) Register gitlab runner:
+`docker exec -it gitlab-runner gitlab-runner register`
+
+#### Task  *
+- integration gitlab-ci vs slack was made by adding webhook from slack to
+`Project Settings > Integrations > Slack notifications`
+link to slack chanel:
+`https://devops-team-otus.slack.com/messages/C9M0Z3ZM2/`
+
+- multi task [gitlab-runner register][99] automation via ` --non-interactive`:
+```
+docker run --rm -t -i -v /path/to/config:/etc/gitlab-runner --name gitlab-runner gitlab/gitlab-runner register \
+  --non-interactive \
+  --executor "docker" \
+  --docker-image alpine:latest \
+  --url "http://<YOUR-VM-IP>/" \
+  --registration-token "PROJECT_REGISTRATION_TOKEN" \
+  --description "docker-runner" \
+  --tag-list "docker" \
+  --run-untagged \
+  --locked="false"
+  ```
