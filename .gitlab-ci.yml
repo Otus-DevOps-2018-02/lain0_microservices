@@ -4,7 +4,9 @@ image: ruby:2.4.2
 stages:
   - build
   - test
-  - deploy
+  - review
+  - stage
+  - production
 
 variables:
   DATABASE_URL: 'mongodb://mongo/user_posts'
@@ -15,8 +17,18 @@ before_script:
 
 build_job:
   stage: build
+  # image: docker:latest
+  # variables:
+  #   DOCKER_OPTS: "--insecure-registry=$CI_REGISTRY"
+  # services:
+  #   - docker:dind
   script:
     - echo 'Building'
+    # - echo $CI_REGISTRY
+    # - echo $CI_PROJECT_PATH
+    # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    # - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_REF_NAME .
+    # - docker push $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_REF_NAME
 
 test_unit_job:
   stage: test
@@ -30,7 +42,43 @@ test_integration_job:
   script:
     - echo 'Testing 2'
 
-deploy_job:
-  stage: deploy
+deploy_dev_job:
+  stage: review
   script:
     - echo 'Deploy'
+  environment:
+    name: dev
+    url: http://dev.example.com
+
+branch review:
+  stage: review
+  script: echo "Deploy to $CI_ENVIRONMENT_SLUG"
+  environment:
+    name: branch/$CI_COMMIT_REF_NAME
+    url: http://$CI_ENVIRONMENT_SLUG.example.com
+  only:
+    - branches
+  except:
+    - master
+
+staging:
+  stage: stage
+  when: manual
+  only:
+    - /^\d+\.\d+\.\d+/
+  script:
+    - echo 'Deploy'
+  environment:
+    name: stage
+    url: https://beta.example.com
+
+production:
+  stage: production
+  when: manual
+  only:
+    - /^\d+\.\d+\.\d+/
+  script:
+    - echo 'Deploy'
+  environment:
+    name: production
+    url: https://example.com
