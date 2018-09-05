@@ -21,8 +21,13 @@ build-prometheus:
 down: ## docker-compose down
 	cd docker && docker-compose down
 
-gcp: ## eval to gcp host
-	eval $(docker-machine env docker-host)
+get-ip:
+	docker-machine ip docker-host
+
+gcp: ## EXPORT get no sense for so no eval (
+	# $(eval $(docker-machine env docker-host))
+	docker-machine ls
+	docker-machine ip docker-host
 
 git-add:
 	git add -u
@@ -33,5 +38,15 @@ push-dockerhub:
 
 tag: ## add tag rc
 	docker images --format "{{.Repository}}"|grep lain0 |uniq | xargs -I image_name docker tag image_name:rc
+
 up: ## docker-compose up -d
 	cd docker && docker-compose up -d
+
+# test:
+	# set -o allexport && set -exv && export DOCKER_NAME="docker-host" && set +o allexport
+	# set -evx && a="$$(docker-machine env docker-host|grep -v "#"| sed "s/\"/'/g")" && eval "$$a"
+	# set -exv && $$(eval "$$(docker-machine env docker-host|sed "s/\"/'/g")")
+	# set -exv && $(eval $$a)
+	# docker-machine env docker-host
+	# docker-machine ls
+	# env |grep DOCKER

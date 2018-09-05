@@ -439,6 +439,7 @@ docker run --rm -t -i -v /srv/gitlab-runner/config:/etc/gitlab-runner --name git
 [108]: https://github.com/google/cloudprober
 [109]: https://hub.docker.com/r/eses/mongodb_exporter/
 [110]: https://gist.github.com/mpneuried/0594963ad38e68917ef189b4e6a269db
+[111]: https://github.com/google/cloudprober/blob/master/Makefile
 
 1) Install Prometheus:
  - Open ports in GCP
@@ -492,5 +493,94 @@ for i in ui post comment prometheus; do docker push $USER_NAME/$i; done
  - [blackbox_exporter][107] and [cloudprober][108]
  cloudprober is less documented for prometheus.yml jobs case so it's easier to use blackbox-exporter
  - [Makefiles][110]
+
+ [Dockerhub account lain0](https://hub.docker.com/u/lain0/)
+
+# hw20 Monitoring infrastructure Alerting
+[112]: https://github.com/google/cadvisor
+[113]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/add_cadvisor
+[114]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/add_grafana
+[115]: https://grafana.com/dashboards
+[116]: https://github.com/express42/reddit/commit/e443f6ab4dcf25f343f2a50c01916d750fc2d096
+[117]: https://github.com/express42/reddit/commit/d8a0316c36723abcfde367527bad182a8e5d9cf2
+[118]: https://prometheus.io/docs/concepts/metric_types/
+[119]: https://github.com/prometheus/client_ruby#counter
+[120]: https://prometheus.io/docs/prometheus/latest/querying/functions/
+[121]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/histogram_quantile
+[122]: https://github.com/express42/reddit/commit/b2e73f1bcc121e9bae67a246dd9e3215a1079d6f
+[123]: https://github.com/express42/reddit/commit/5e011209a92ba5749d6975a2b7cb35aad49e304e
+[124]: https://devops-team-otus.slack.com/apps/A0F7XDUAZ-incoming-webhooks?next_id=0
+[125]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/alertmanager_config.yml
+[126]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/prom_alerts.yml
+[127]: https://raw.githubusercontent.com/express42/otus-snippets/master/hw-23/add_prom_alerts
+[128]: https://api.slack.com/incoming-webhooks
+
+```
+eval $(docker-machine env docker-host)
+docker-machine ls
+docker-machine ip docker-host
+```
+1) Docker Container Monitoring
+Let's split `docker-compose.yml` into two files by:
+  - for running microservices - `docker-compose.yml` runs:
+  `docker-compose up -d`
+  - for running monitoring `docker-compose-monitoring.yml` runs:
+  `docker-compose -f docker-compose-monitoring.yml up -d`
+2) [cAdvisor][112]
+Rebuild prometheus vs cAdvisor job
+```
+export USER_NAME=username
+docker build -t $USER_NAME/prometheus monitoring/prometheus/
+```
+Run containers:
+```
+docker-compose up -d
+docker-compose -f docker-compose-monitoring.yml up -d
+```
+Open port tcp:8080 for cAdvisor
+`gcloud compute firewall-rules create cadvisor-allow --allow tcp:8080`
+3) Metrics Visualisations - [Grafana][115]
+open port for grafana:
+`gcloud compute firewall-rules create grafana-allow --allow tcp:3000`
+build and run grafana container:
+`docker-compose -f docker-compose-monitoring.yml up -d grafana`
+4) Collecting application metrics && Monitoring APP
+
+```
+export USER_NAME=lain0
+docker build -t $USER_NAME/prometheus monitoring/prometheus/
+cd docker
+docker-compose -f docker-compose-monitoring.yml down
+docker-compose -f docker-compose-monitoring.yml up -d
+```
+[Histogram][118] and Percentile
+rate(ui_request_count[1m])
+rate(ui_request_count{http_status=~"^[200].*"}[1m])
+rate(ui_request_count{http_status=~"^[45].*"}[1m])
+histogram_quantile(0.95, sum(rate(ui_request_latency_seconds_bucket[5m])) by (le))
+5) Collecting Buisness metrics
+6) Alerting
+ - build docker image for Prometheus Alertmanager component
+```
+cd monitoring/alertmanager/
+docker build -t lain0/alertmanager .
+```
+ - Add New service to docker-compose-monitoring.yml:
+
+7) Alert rules
+ - Build Prometheus image:
+ ```
+ docker build -t lain0/prometheus .
+ ```
+ - Recreate docker monitoring infrastructure:
+```
+cd docker
+docker-compose -f docker-compose-monitoring.yml down
+docker-compose -f docker-compose-monitoring.yml up -d
+gcloud compute firewall-rules create alertmanager-allow --allow tcp:9093
+```
+
+8) Push all lain0/* repository to dockerhub
+`make push-dockerhub`
 
  [Dockerhub account lain0](https://hub.docker.com/u/lain0/)

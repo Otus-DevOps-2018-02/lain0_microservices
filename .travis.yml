@@ -2,9 +2,15 @@
 dist: trusty
 sudo: required
 language: bash
+env: YAML_LINT_VERSION=1.11.1
 before_install:
-- curl https://raw.githubusercontent.com/express42/otus-homeworks/2018-02/run.sh |
-  bash
+  - curl https://raw.githubusercontent.com/express42/otus-homeworks/2018-02/run.sh | bash
+install:
+  - sudo pip install -q --upgrade pip
+  - sudo pip install yamllint==${YAML_LINT_VERSION}
+script:
+  - cd ${TRAVIS_BUILD_DIR} \
+    yamllint --strict $(git ls-files '*.yaml' '*.yml'|grep -vE ".travis.yml|credentials.yml") -c .yamllint.yml
 notifications:
   slack:
     secure: pLRuQ1TVnb0ud+hQuWxMo9LQd/79EWenHFyvMLWE21gmyDLH0jULLGyu4EYfwBSOEVZVw2vFEgnRZZQa9VxDBuhpSsVPSYlfpk8zx0faa3wHp0DYDgTh8QJCQsvIJ56yKYVzGaE2wtrKUP2FJ3Qf3smFbDK+ESF8CS5J+Q709P7dTNTVsKW6eDK7dyVcvQ0iK5MpYgCzBBIvyvlaqd7WRUPxFYMLH37S7c1aJIwCY3KZQW6hnYRTEM/24YJN0FlK8UZNzCI1zxmhRFQGydD0QgTIsVCKBdwATaRUcZRFBZ6KSdafoC+G3nHgqac+ef/k3SWxVXaoC1O5UF6JRW1bNIa/V+sVOa8EdGnT+zmoP32DcUJ/KNj+lWOQd68lBh+0J5sUzVDQ+CmJTmWaAN3jPt66cRiUTUYMCqcWqLD0eUteLApDL78ftzdBvhu9KfmLBulTOEeAzP1YFkFxY3nR43Dwo1d3JhHCVR05b7hVLfZsJPS/aen/11/UDFSf8uftLB/Tve9l4zEmLadO/8D0ciRTT9TtBDJo7SVG0r2E48KLDFAPTV4VWhU4QmS7/7sz7S8PXBa6DEtj+skqd71YrpUYjw/yIJcRhqiFpggNkFX89giTuGzo61p27FyoWN39rLHi8pYNXeqfgfxes4iO3+Yw8tcwen7ZmdEjfx4qzvk=
