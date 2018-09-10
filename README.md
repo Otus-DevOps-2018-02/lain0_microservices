@@ -659,7 +659,7 @@ docker build -t $USER_NAME/fluentd logging/fluentd/
 cd docker && docker-compose -f docker-compose-logging.yml up -d
 ```
 
-# hw22
+# hw22 Kubernetes
 
 [138]: https://gist.githubusercontent.com/chromko/d90b18ed9fac3eba9d19a72deec5d346/raw/dd4261dfb8e1b190f9b7a3d2dca6ce349976052b/gistfile1.txt
 [139]: https://github.com/kelseyhightower/kubernetes-the-hard-way
@@ -667,7 +667,7 @@ cd docker && docker-compose -f docker-compose-logging.yml up -d
 [kubernetes-the-hard-way][139]
 
 
-# TEST k8s applications:
+# TEST k8s applications `kubectl apply -f ./kubernetes/reddit` :
 ```
 kubectl apply -f comment-deployment.yml
 kubectl apply -f ui-deployment.yml
@@ -677,4 +677,217 @@ kubectl apply -f mongo-deployment.yml
 
 ```
 kubectl get pods -o wide
+```
+
+# hw23 Kubernetes Controllers Security
+[140]: https://kubernetes.io/docs/tasks/tools/install-kubectl/
+[141]: https://www.virtualbox.org/wiki/Downloads
+[142]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/minikube-install-linux
+[143]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/ui-deployment.yml
+[144]: https://gist.githubusercontent.com/chromko/0a120bc15784da4ef19f82f32f0b049e/raw/b8d709c06dfa7c6facad52ad4c3931e62e61d305/gistfile1.txt
+[145]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/comment-deployment-with-db.yml
+[146]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/mongo-deployment-with-volume.yml
+[147]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/comment-service.yml
+[148]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/mongodb-service.yml
+[149]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/comment-mongodb-service.yml
+[150]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/ui-deployment-with-env.yml
+[151]: https://console.cloud.google.com/home/dashboard?project=reddit-kubernates&authuser=1
+
+1) Install kubectl and Minukube
+```
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.28.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+```
+2) Run Minukube Cluster:
+```
+minikube start
+```
+3) Kubectl:
+- k8s node list
+```
+kubectl get nodes
+```
+- k8s context `~/.kube/config`:
+    - cluster - API-server
+    - user - user to connect to cluster
+    - namespace
+- cluster:
+    - server - kubernetes API server's address
+    - certificate-authority - root certificate
+  name - identification name in config file
+- user: auth credentials
+    - username + password (Basic Auth
+    - client key + client certificate
+    - token
+    - auth-provider config (GCP)
+  name - identification name in config file
+- context:
+    - cluster - cluste rname
+    - user - user name
+    - namespace
+  name
+4) Kubectl configure:
+- Create cluster:
+```
+kubectl config set-cluster ... cluster_name
+```
+- Create credentials:
+```
+kubectl config set-credentials ... user_name
+```
+- Create context:
+```
+kubectl config set-context context_name \
+  --cluster=cluster_name \
+  --user=user_name
+```
+- Use context:
+```
+kubectl config use-context context_name
+```
+- Know current context:
+```
+kubectl config current-context
+```
+- All context list
+```
+kubectl config get-contexts
+```
+5) Run application:
+6) Deployment
+6.1) [ui deployment][143]
+- Run ui-component:
+```
+{
+cd kubernetes/reddit
+kubectl apply -f ui-deployment.yml
+}
+```
+- list replics:
+```
+kubectl get deployment
+```
+- list ui pods:
+```
+kubectl get pods --selector component=ui
+```
+- port forwarding:
+```
+kubectl port-forward <pod-name> 8080:9292
+```
+```
+curl localhost:9292/healthcheck
+```
+6.2) [Comment deployment][144]
+```
+{
+cd kubernetes/reddit
+kubectl apply -f comment-deployment.yml
+kubectl get deployment
+kubectl get pods --selector component=comment
+}
+```
+- port forwarding:
+```
+kubectl port-forward <pod-name> 8181:9292
+curl localhost:8181/healthcheck
+```
+6.3) Post deployment
+- Run post-component:
+```
+{
+cd kubernetes/reddit
+kubectl apply -f post-deployment.yml
+kubectl port-forward <pod-name> 8282:5000
+curl localhost:8282/healthcheck
+}
+```
+6.4) [Mongo deployment][146]
+- mount volume outside container
+6.5) Services
+- make comment service available by name from any pods by adding it's to services:
+```
+kubectl apply -f comment-service.yml
+```
+- list endpoints vs somponent comment
+```
+kubectl describe service comment | grep Endpoints
+kubectl exec -ti <pod-name> nslookup comment
+```
+```
+kubectl apply -f post-service.yml
+kubectl apply -f mongo-service.yml
+kubectl apply -f comment-mongodb-service.yml
+kubectl apply -f post-mongodb-service.yml
+```
+
+minikube service ui
+```
+minikube service list
+```
+7) Namespaces
+- default - vs local namespace only
+- kube-system - objects made by k8s for it's own
+- kube-public - global objects visible from al cluster
+
+```
+kubectl get all -n kube-system
+kubectl get all -n kube-system --selector k8s-app=kubernetes-dashboard
+```
+8) Dashboard
+open dashboard:
+```
+minikube service kubernetes-dashboard -n kube-system
+```
+9) Create dev namespace
+```
+kubectl apply -f dev-namespace.yml
+```
+run app in dev namespace:
+```
+kubectl apply -f ui-deployment.yml -n dev
+minikube service ui -n dev
+```
+10) Google Kubernetes Engine.
+- In web browser [create kubernetes cluster][151]
+- Connect to the cluster:
+```
+gcloud container clusters get-credentials gke-cluster1 --zone europe-west1-d --project reddit-kubernates
+```
+- know kubernetes current-context
+```
+kubectl config current-context
+```
+11) Deploy Reddit to GKE:
+- create namespace dev:
+```
+kubectl apply -f ./kubernetes/reddit/dev-namespace.yml
+```
+- deploy reddit in namespace dev
+```
+kubectl apply -f ./kubernetes/reddit/ -n dev
+```
+- create firewall-rules to open ports in web browser
+- see project firewall-rules
+```
+gcloud compute firewall-rules list --filter network=default --filter gke-cluster1
+```
+```
+kubectl describe service ui -n dev |grep NodePort
+```
+
+[152]: http://35.240.30.72:32092/
+
+[gke_link:32092][152]
+
+[153]: https://raw.githubusercontent.com/express42/otus-snippets/e7b0bc08c47a77709d313cfcbbaa3f9ed4b19340/k8s-controllers/kubectl-create-clusterrolebinding
+
+12) Security:
+- open locally http://127.0.0.1:ui:8001
+```
+kubectl proxy
+```
+- RBAC authorization requires higher ClusterRole access rights, we can assign role `cluster-admin`
+
+```
+kubectl create clusterrolebinding kubernetes-dashboard  --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
 ```

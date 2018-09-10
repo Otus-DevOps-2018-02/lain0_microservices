@@ -18,3 +18,10 @@ gcloud compute networks create kubernetes-the-hard-way --subnet-mode custom
 ```
 gcloud compute addresses list --filter="name=('kubernetes-the-hard-way')"
 ```
+- cluster info:
+```
+kubectl cluster-info
+```
+- use namespace
+kubectl -n namespace_name
+kubectl --namespace namespace_name
